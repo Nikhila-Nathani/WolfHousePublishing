@@ -1,0 +1,41 @@
+package services;
+
+import constants.Constants;
+import entity.DistributorType;
+import utility.DatabaseUtility;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+public class DistributorTypeService {
+    private static final String GET_ALL_DISTRIBUTOR_TYPES = "SELECT * FROM DISTRIBUTOR_TYPE";
+
+    public List<DistributorType> getAllDistributorTypes(){
+        List<DistributorType> distributorTypes = new ArrayList<>();
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_DISTRIBUTOR_TYPES);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet!=null){
+                while(resultSet.next()){
+                    distributorTypes.add(new DistributorType(resultSet.getInt("ID"),resultSet.getString("NAME")));
+                }
+            }
+        }catch(Exception e){
+            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            return distributorTypes;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch(Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return distributorTypes;
+        }
+    }
+
+}
