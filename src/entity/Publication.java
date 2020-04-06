@@ -8,12 +8,22 @@ public class Publication {
     private String publicationTitle;
     private Date publicationDate;
     private PublicationTopic publicationTopic;
+    private Integer price;
 
-    public Publication(Integer publicationId, String publicationTitle, Date publicationDate, PublicationTopic publicationTopic) {
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Publication(Integer publicationId, String publicationTitle, Date publicationDate,Integer price, PublicationTopic publicationTopic) {
         this.publicationId = publicationId;
         this.publicationTitle = publicationTitle;
         this.publicationDate = publicationDate;
         this.publicationTopic = publicationTopic;
+        this.price = price;
     }
 
     public Integer getPublicationId() {
@@ -50,7 +60,10 @@ public class Publication {
 
     @Override
     public String toString() {
-        return "Id : \t"+publicationId+"\tTitle : \t"+publicationTitle+"\tDate : \t"+
-                publicationDate+"\nPublication Topic : "+publicationTopic.getPublicationTopicName();
+
+        return "\t"+publicationId+"\t"+publicationTitle+"\t"+publicationDate+"\t"+price+"\t"+publicationTopic.getPublicationTopicName();
+
+        /*return "Id : \t"+publicationId+"\tTitle : \t"+publicationTitle+"\tDate : \t"+
+                publicationDate+"\nPublication Topic : "+publicationTopic.getPublicationTopicName();*/
     }
 }

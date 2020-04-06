@@ -29,6 +29,7 @@ public class PublicationTopicService {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(Constants.CONNECTION_ERROR.getMessage());
             return publicationTopics;
         } finally {

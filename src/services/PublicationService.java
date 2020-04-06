@@ -13,14 +13,15 @@ import java.util.List;
 
 public class PublicationService {
 
-    private static final String GET_ALL_PUBLICATIONS = "SELECT P1.ID AS ID, P1.TITLE AS TITLE, P1.PUBLICAION_DATE AS PUB_DATE, P1.PRICE AS PRICE, " +
-            "P2.ID AS TOPIC_IDP2.NAME AS TOPIC_ID"+
-            "FROM PUBLICATION P1, PUBLCIATION_TOPIC P2 WHERE P1.PUBLICATION_TOPIC = P2.ID";
+    private static final String GET_ALL_PUBLICATIONS =
+            "SELECT P1.ID AS ID, P1.TITLE AS TITLE, P1.PUBLICATION_DATE AS PUB_DATE, P1.PRICE AS PRICE," +
+            " P2.ID AS TOPIC_ID, P2.NAME AS TOPIC " +
+            "FROM PUBLICATION P1, PUBLICATION_TOPIC P2 WHERE P1.PUBLICATION_TOPIC = P2.ID;";
 
     private static final String CREATE_PUBLICATION = "INSERT INTO PUBLICATION (TITLE, PUBLICATION_DATE, PUBLICATION_TOPIC) VALUES (?,?,?)";
 
-    public List<Publication> getAllPublications(){
-        List<Publication> publications= new ArrayList<>();
+    public List<Object> getAllPublications(){
+        List<Object> publications= new ArrayList<>();
         Connection connection = null;
 
         try{
@@ -29,7 +30,7 @@ public class PublicationService {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){
-                    publications.add(new Publication(resultSet.getInt("ID"),resultSet.getString("TITLE"),resultSet.getDate("PUB_DATE")
+                    publications.add(new Publication(resultSet.getInt("ID"),resultSet.getString("TITLE"),resultSet.getDate("PUB_DATE"),resultSet.getInt("PRICE")
                             ,new PublicationTopic(resultSet.getInt("TOPIC_ID"),resultSet.getString("TOPIC"))));
                 }
             }

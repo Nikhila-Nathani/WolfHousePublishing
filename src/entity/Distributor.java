@@ -3,13 +3,13 @@ package entity;
 public class Distributor {
     private Integer distributorId;
     private String distributorName;
-    private Integer phoneNumber;
-    private Float balance;
+    private Long phoneNumber;
+    private Integer balance;
     private String activeStatus;
     private DistributorType distributorType;
 
-    public Distributor(Integer distributorId, String distributorName, Integer phoneNumber,
-                       Float balance, String activeStatus, DistributorType distributorType) {
+    public Distributor(Integer distributorId, String distributorName, Long phoneNumber,
+                       Integer balance, String activeStatus, DistributorType distributorType) {
         this.distributorId = distributorId;
         this.distributorName = distributorName;
         this.phoneNumber = phoneNumber;
@@ -50,19 +50,19 @@ public class Distributor {
         this.distributorName = distributorName;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public Float getBalance() {
+    public Integer getBalance() {
         return balance;
     }
 
-    public void setBalance(Float balance) {
+    public void setBalance(Integer balance) {
         this.balance = balance;
     }
 
