@@ -37,7 +37,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Id : \t"+ publication +"\tISBN : \t"+isbnNumber+"\tEdition : \t"+
-                edition;
+        return "\t"+ publication.getPublicationId() +"\t"+ publication.getPublicationTitle()+"\t"+
+                publication.getPublicationTopic().getPublicationTopicName()+"\t"+isbnNumber+"\t"+ edition;
     }
 }

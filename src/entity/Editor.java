@@ -9,7 +9,7 @@ public class Editor {
 
     @Override
     public String toString() {
-        return "\t"+employee.getEmployeeId()+"\t"+employee.getEmployeeName();
+        return this.employee.toString();
     }
 
     public Employee getEmployee() {

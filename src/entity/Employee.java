@@ -47,6 +47,6 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Id : \t"+employeeId+"\tName : \t"+employeeName+"\tPay : \t"+pay+"\tPeriodicity : \t"+periodicity;
+        return "\t"+employeeId+"\t"+employeeName+"\t"+pay+"\t"+periodicity;
     }
 }

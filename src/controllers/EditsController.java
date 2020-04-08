@@ -27,4 +27,8 @@ public class EditsController {
         return editService.getPublicationsForEditor(e);
     }
 
+    public List<Object> getEditorForPublication(Publication publication){
+        return editService.getEditorForPublication(publication);
+    }
+
 }

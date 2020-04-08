@@ -27,6 +27,6 @@ public class PublicationTopic {
 
     @Override
     public String toString(){
-        return "Id : \t" + this.getPublicationTopicId() + "\tName : \t"+this.getPublicationTopicName();
+        return "\t" + this.getPublicationTopicId() + "\t"+this.getPublicationTopicName();
     }
 }

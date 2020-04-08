@@ -1,0 +1,73 @@
+Operation 1: [COMPLETED]
+        1. Enter basic information on a new publication.
+             createPublication();
+        2. Update information.
+            updatePublication()
+        3. Assign editor(s) to publication.
+            assignEditors()
+        4. Let each editor view the information on the publications he/she is responsible for.
+            getPublicationForEditors()
+        5. Add articles to peripdic publications (has_article)
+            addArticlesToPeriodicPublication()
+        6. Delete articles for peripdic publications (has_article)
+            deleteArticlesToPeriodicPublication()
+        7. add chapter
+            addChaptersToBook() (testing remaining)
+        8. delete chapter
+            deleteChaptersFromBooks();
+        9. get publication by title.
+            getPublicationByTitle()
+        10. get publication by date.
+            getPublicationByDate()
+        11. get publication by id.
+            getPublicationById()
+        12. get publication by topic
+            getPublicationByTopic()
+        13. get editors for publication
+            getEditorsForPublication()
+
+Operation 2:
+        1. add book
+        2. add book edition
+        3. delete book edition
+        4. delete book
+        5. add new issue
+        6. delete issue
+        7. add article
+           createArticle()
+        8. update article
+        9. delete article
+           deleteArticle()
+        10. get book by topic
+            getBookByTopic()
+        11. get book by date
+            getBookByDate()
+        12. get book by auhtor name
+        13. get article by topic
+            getArticlesByTopic()
+        14. get article by date
+            getArticlesByDate()
+        15. get article by author name
+        16. process payment for employee
+        17. update book edition
+        18. update publication issue
+
+Operation 3:
+        1. add new distributor (In progress)
+        2. update distributor
+        3. delete distributor
+        4. create order
+        5. update balance on receipt of order
+        6. generate bill
+
+Operation 4:
+        1. Number and total price of copies of each publication bought per distributor per month
+        2. Total revenue
+        3. Total expenses
+        4. Total current number of distributors
+        5. Total revenue per city
+        6. Total revenue per distributor
+        7. Total revenue per location
+        8. Total payments per time period and per work type (book authorship)
+        9. Calculate total payments per time period and per work type (ARTICLE authorship)
+        10. Calculate total payments per time period and per work type (EDITOR authorship):

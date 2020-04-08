@@ -14,8 +14,8 @@ public class PublicationTopicService {
 
     private static final String GET_ALL_PUBLICATION_TOPICS = "SELECT * FROM PUBLICATION_TOPIC";
 
-    public List<PublicationTopic> getAllPublicationTopics(){
-        List<PublicationTopic> publicationTopics = new ArrayList<>();
+    public List<Object> getAllPublicationTopics(){
+        List<Object> publicationTopics = new ArrayList<>();
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
@@ -29,7 +29,6 @@ public class PublicationTopicService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println(Constants.CONNECTION_ERROR.getMessage());
             return publicationTopics;
         } finally {

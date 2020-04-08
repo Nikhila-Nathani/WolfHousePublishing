@@ -29,6 +29,6 @@ public class Article {
 
     @Override
     public String toString() {
-        return "Title : \t"+title+"\tDate Of creation : \t"+dateOfCreation;
+        return "\t"+title+"\t"+dateOfCreation;
     }
 }

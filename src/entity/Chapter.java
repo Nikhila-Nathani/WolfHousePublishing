@@ -38,8 +38,13 @@ public class Chapter {
 
     @Override
     public String toString() {
-        return "Book Id :\t" + book.getPublication() + "\tBook Name : \t"+ book.getPublication().getPublicationTitle()+
-                "\tChapterNumber:" + chapterNumber +
-                "\nText='" + text;
+        return "\t" + book.getPublication().getPublicationId() + "\t"+ book.getPublication().getPublicationTitle()+
+                "\t" + chapterNumber;
+    }
+
+    public String toString(int i){
+        return "\t" + book.getPublication().getPublicationId() + "\t"+ book.getPublication().getPublicationTitle()+
+                "\t" + chapterNumber +
+                "\t" + text;
     }
 }

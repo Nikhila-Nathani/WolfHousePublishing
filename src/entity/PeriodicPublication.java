@@ -32,8 +32,8 @@ public class PeriodicPublication {
 
     @Override
     public String toString() {
-        return "Id: \t" + publication.getPublicationId() +
-                " \t Periodicity: \t" + periodicity.getPeriodicityName();
+        return "\t"+publication.getPublicationId()+"\t"+publication.getPublicationTitle()+"\t"+publication.getPublicationDate()+"\t"+publication.getPrice()+"\t"+
+                publication.getPublicationTopic().getPublicationTopicName()+"\t"+periodicity.getPeriodicityName();
     }
 }
 

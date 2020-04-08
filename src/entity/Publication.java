@@ -26,6 +26,13 @@ public class Publication {
         this.price = price;
     }
 
+    public Publication( String publicationTitle, Date publicationDate,Integer price, PublicationTopic publicationTopic) {
+        this.publicationTitle = publicationTitle;
+        this.publicationDate = publicationDate;
+        this.publicationTopic = publicationTopic;
+        this.price = price;
+    }
+
     public Integer getPublicationId() {
         return publicationId;
     }
@@ -54,7 +61,7 @@ public class Publication {
         return publicationTopic;
     }
 
-    public void setPublicationTopic(PublicationTopic publicationTopicId) {
+    public void setPublicationTopic(PublicationTopic publicationTopic) {
         this.publicationTopic = publicationTopic;
     }
 
