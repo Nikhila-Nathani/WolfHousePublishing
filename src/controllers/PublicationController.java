@@ -4,7 +4,6 @@ import entity.Publication;
 import entity.PublicationTopic;
 import services.PublicationService;
 
-import java.sql.Date;
 import java.util.List;
 
 public class PublicationController {
@@ -43,4 +42,11 @@ public class PublicationController {
         return publicationService.getPublicationByTopic(publicationTopic);
     }
 
+    public int createPublicationAndGetId(Publication publication){
+        return publicationService.createPublicationAndGetId(publication);
+    }
+
+    public boolean deletePublication(Publication publication) {
+        return publicationService.deletePublication(publication);
+    }
 }

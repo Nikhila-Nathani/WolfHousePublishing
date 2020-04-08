@@ -6,10 +6,7 @@ import entity.PublicationTopic;
 import org.mariadb.jdbc.internal.util.dao.PrepareResult;
 import utility.DatabaseUtility;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +28,8 @@ public class PublicationService {
     private static final String GET_PUBLICATION_BY_DATE= "SELECT P1.ID AS ID, P1.TITLE AS TITLE, P1.PUBLICATION_DATE AS PUB_DATE, P1.PRICE AS PRICE, P2.ID AS TOPIC_ID, P2.NAME AS TOPIC FROM PUBLICATION P1, PUBLICATION_TOPIC P2 WHERE P1.PUBLICATION_TOPIC = P2.ID AND P1.PUBLICATION_DATE = ?";
 
     private static final String GET_PUBLICATION_BY_TOPIC = "SELECT P1.ID AS ID, P1.TITLE AS TITLE, P1.PUBLICATION_DATE AS PUB_DATE, P1.PRICE AS PRICE, P2.ID AS TOPIC_ID, P2.NAME AS TOPIC FROM PUBLICATION P1, PUBLICATION_TOPIC P2 WHERE P1.PUBLICATION_TOPIC = P2.ID AND P2.ID = ?;";
+
+    private static final String DELETE_PUBLICATION = "DELETE  FROM PUBLICATION WHERE ID = ?";
 
 
     public List<Object> getAllPublications(){
@@ -93,6 +92,48 @@ public class PublicationService {
         }
 
     }
+
+
+    public int createPublicationAndGetId(Publication publication){
+        Connection connection =null;
+        int key = -1;
+        try{
+            connection = DatabaseUtility.getConnection();
+
+            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PUBLICATION, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1,publication.getPublicationTitle());
+            preparedStatement.setDate(2,publication.getPublicationDate());
+            preparedStatement.setInt(3,publication.getPublicationTopic().getPublicationTopicId());
+            preparedStatement.setInt(4,publication.getPrice());
+
+            int result = preparedStatement.executeUpdate();
+            System.out.println("result : "+result);
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if(resultSet.next()){
+                key = resultSet.getInt(1);
+            }
+        } catch(Exception e){
+            if(connection!=null){
+                System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return key;
+        } finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch(Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return key;
+        }
+
+    }
+
+
+
+
 
     public boolean updatePublication(Publication publication){
         Connection connection = null;
@@ -247,5 +288,29 @@ public class PublicationService {
     }
 
 
-
+    public boolean deletePublication(Publication publication) {
+            boolean flag = false;
+            Connection connection = null;
+            try{
+                connection = DatabaseUtility.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PUBLICATION);
+                preparedStatement.setInt(1,publication.getPublicationId());
+                int result = preparedStatement.executeUpdate();
+                flag = result ==1? true : false;
+            }catch (Exception e){
+                if(connection!=null){
+                    System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
+                }else{
+                    System.out.println(Constants.CONNECTION_ERROR.getMessage());
+                }
+                return flag;
+            }finally {
+                try{
+                    DatabaseUtility.closeconnection();
+                }catch(Exception e){
+                    System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+                }
+                return flag;
+            }
+    }
 }

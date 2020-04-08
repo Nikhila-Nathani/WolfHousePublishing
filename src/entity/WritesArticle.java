@@ -2,20 +2,21 @@ package entity;
 
 public class WritesArticle {
 
-    private Integer authorId;
+    private Author author;
     private String articleTitle;
 
-    public WritesArticle(Integer authorId, String articleTitle) {
-        this.authorId = authorId;
+    public WritesArticle(Author authorId, String articleTitle) {
+        this.author = author;
         this.articleTitle = articleTitle;
     }
 
-    public Integer getAuthorId() {
-        return authorId;
+
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(Integer authorId) {
-        this.authorId = authorId;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public String getArticleTitle() {
@@ -28,7 +29,6 @@ public class WritesArticle {
 
     @Override
     public String toString() {
-        return "Author Id:\t" + authorId +
-                "\tArticle Title:\t" + articleTitle;
+        return "\t"+articleTitle+"\t"+author.getEmployee().getEmployeeName();
     }
 }

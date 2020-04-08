@@ -173,17 +173,4 @@ public class OrderService {
 
     }
 
-
-    public static void main(String[] args){
-        HashMap<Integer,Integer> order = new HashMap<Integer, Integer>();
-        int distributor_id=1;
-
-        order.put(8,4);
-        order.put(9,5);
-
-        createOrder(order,distributor_id);
-
-
-
-    }
 }

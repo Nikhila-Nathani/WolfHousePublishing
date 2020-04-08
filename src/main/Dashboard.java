@@ -3,7 +3,6 @@ package main;
 import constants.Constants;
 import controllers.*;
 import entity.*;
-import services.PublicationTopicService;
 import utility.DatabaseUtility;
 import utility.PageUtility;
 import utility.PropertiesUtility;
@@ -27,6 +26,9 @@ public class Dashboard {
     private  static HasArticleController hasArticleController;
     private static  BookController bookController;
     private static  ChapterController chapterController;
+    private  static AuthorController authorController;
+    private static  WriteBookController writeBookController;
+    private static WritesArticleController writesArticleController;
     static{
         scanner = new Scanner(System.in);
         publicationController = new PublicationController();
@@ -38,6 +40,9 @@ public class Dashboard {
         hasArticleController = new HasArticleController();
         bookController = new BookController();
         chapterController = new ChapterController();
+        authorController = new AuthorController();
+        writeBookController = new WriteBookController();
+        writesArticleController = new WritesArticleController();
     }
 
     public static void main(String args[]) throws SQLException, ClassNotFoundException {
@@ -50,10 +55,10 @@ public class Dashboard {
         //getPublicationByDate();
         //getPublicationByTopic();
 
-
         //addArticlesToPeriodicPublication();
-        // addChaptersToBook();
+       // addChaptersToBook();
         //deleteChaptersFromBooks();
+        // s();
         //deleteArticlesForPeriodicPublication();
 //        articleController.getAllArticles();
 //
@@ -73,18 +78,135 @@ public class Dashboard {
 
         /*Operations 2 */
 
-        //getBookByTopic();
-        //getBookByDate();
-        //getArticlesByTopic();
-        //getArticlesByDate();
-        //createArticle();
-        deleteArticle();
+//        getBookByTopic();
+//        getBookByDate();
+//        getArticlesByTopic();
+//        getArticlesByDate();
+//         createArticle();
+//         deleteArticle();
+
+        //createBook();
+
+        //deleteBook();
+//        getBooksByAuthorName();
+        getArticlesByAuthorName();
+
 
     }
 
+    private static void getBooksByAuthorName() {
+        System.out.println("-----------------------------GET BOOKS BY AUTHOR NAME -------------------");
+        List<Object> authors = authorController.getAllAuthors();
+        System.out.println("Enter the serial number of author for whom you will like to fetch the books :");
+        String columns = "SerialNo\tId\tName";
+        PageUtility.displayOptions(columns,authors);
+        int serialNumber = scanner.nextInt();
+        Author a = (Author)authors.get(serialNumber-1);
+        List<Object>  books = writeBookController.getBooksByAuthor(a.getEmployee().getEmployeeName());
+        if(books.size()==0){
+            System.out.println("There are no books yet written by : "+a.getEmployee().getEmployeeName());
+        }else{
+            System.out.println("The books written by '"+a.getEmployee().getEmployeeName()+"' are as follows : ");
+            String columns1 = "SerialNo\tId\tTitle\tTopic\tISBN\tEdition";
+            PageUtility.displayOptions(columns1,books);
+        }
+
+    }
+
+    private static void getArticlesByAuthorName() {
+        System.out.println("-----------------------------GET ARTICLES BY AUTHOR NAME -------------------");
+        List<Object> authors = authorController.getAllAuthors();
+        System.out.println("Enter the serial number of author for whom you will like to fetch the articles :");
+        String columns = "SerialNo\tId\tName";
+        PageUtility.displayOptions(columns,authors);
+        int serialNumber = scanner.nextInt();
+        Author a = (Author)authors.get(serialNumber-1);
+        List<Object>  articles = writesArticleController.getArticlesByAuthor(a.getEmployee().getEmployeeName());
+        if(articles.size()==0){
+            System.out.println("There are no articles yet written by : "+a.getEmployee().getEmployeeName());
+        }else{
+            System.out.println("The articles written by '"+a.getEmployee().getEmployeeName()+"' are as follows : ");
+            String columns1 = "SerialNo\tTitle";
+            PageUtility.displayOptions(columns1,articles);
+        }
+
+    }
+
+    private static void deleteBook() {
+        //TODO doubt for deleting chapter
+        System.out.println("------------------------ DELETE BOOK -------------------------------");
+        List<Object> books = bookController.getAllBooks();
+        String columns = "SerialNo\tId\tTitle\tTopic\tISBN\tEdition";
+        PageUtility.displayOptions(columns,books);
+        System.out.println("Enter the serial number of the book you wish to delete : ");
+        Integer bookSerialNumber = scanner.nextInt();
+        Book book = (Book)books.get(bookSerialNumber-1);
+        if(bookController.deleteBook(book)){
+            System.out.println("Book deleted successfully!");
+            if(publicationController.deletePublication(book.getPublication())){
+                //System.out.println("The corresponding publication for the book deleted!");
+                List<Object> chapters = chapterController.getChaptersForABook(book);
+                List<Chapter> chaptersToBeDelted = new ArrayList<>();
+                for (Object c : chapters){
+                    chapters.add((Chapter)c);
+                }
+                Chapter result = chapterController.deleteChapters(chaptersToBeDelted);
+                if(result==null){
+                    System.out.println("Chapters for the given book deleted successfully!");
+                }else{
+                    System.out.println("Deletetion failed for the given object :\n"+result.toString());
+                    System.out.println("All pairs before this have been deleted!");
+                    System.out.println("All pairs after this have been skipped!");
+                }
+            }
+        }
+    }
+
+    private static void createBook(){
+        System.out.println("------------------------ CREATE BOOK -------------------------------");
+        System.out.println("Enter the Title for the Publication : ");
+        String title = scanner.nextLine();
+        System.out.println("Enter the price for the publication : ");
+        Integer price = scanner.nextInt();
+        System.out.println("Enter the publication date : (YYYY-MM-DD)");
+        String date = scanner.next();
+        Date date1 = Date.valueOf(date);
+        List<Object> publicationTopics = publicationTopicController.getAllPublicationTopics();
+        System.out.println("Select the serial no of publication topic for which you want to create  a book :");
+        String columns = "SerialNo\tId\tName";
+        PageUtility.displayOptions(columns,publicationTopics);
+        Integer topicId = scanner.nextInt();
+        PublicationTopic publicationTopic = (PublicationTopic) publicationTopics.get(topicId-1);
+        Publication publication = new Publication(title,date1,price,publicationTopic);
+        int publicationId = publicationController.createPublicationAndGetId(publication);
+        if(publicationId==-1){
+            System.out.println("Entry failed for Publication table!");
+        }else{
+            publication.setPublicationId(publicationId);
+            System.out.println("Enter the ISBN for the book :");
+            Integer ISBN = scanner.nextInt();
+            System.out.println("Enter the edition of the book : ");
+            String edition = scanner.next();
+            Book book = new Book(publication,ISBN,edition);
+            if(bookController.createBook(book)){
+                System.out.println("Book created successfully!");
+            }
+        }
+
+
+
+
+    }
     private static void deleteArticle() {
         System.out.println("------------------------ DELETE ARTICLE -------------------------------");
-
+        List<Object> articles = articleController.getAllArticles();
+        System.out.println("Enter the serial number of article you wish to delete : ");
+        String column = "SerialNo\tTitle\tDateOfCreation";
+        PageUtility.displayOptions(column,articles);
+        int serialNumber = scanner.nextInt();
+        if(articleController.deleteArticle((Article) articles.get(serialNumber-1))){
+            System.out.println("Article deleted successfully!");
+        }
     }
 
     private static void createArticle(){
@@ -136,7 +258,7 @@ public class Dashboard {
     private static void getBookByTopic() {
         System.out.println("----------------------GET BOOKS BY TOPIC -------------------------");
         List<Object> publicationTopics = publicationTopicController.getAllPublicationTopics();
-        System.out.println("Select the serial no of publication topic for which you want to retireve the books :");
+        System.out.println("Select the serial no of publication topic for which you want to retrieve the books :");
         String columns = "SerialNo\tId\tName";
         PageUtility.displayOptions(columns,publicationTopics);
         Integer topicId = scanner.nextInt();

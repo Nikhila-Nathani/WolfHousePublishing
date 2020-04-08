@@ -23,11 +23,9 @@ public class BookService {
             "FROM BOOKS B, PUBLICATION P, PUBLICATION_TOPIC PT " +
             "WHERE B.PUBLICATION_ID = P.ID AND P.PUBLICATION_TOPIC = PT.ID AND PT.NAME =?";
 
-    private static final String GET_BOOKS_BY_DATE = "SELECT B.ISBN_NO, B.EDITION, " +
-            "P1.ID AS PUB_ID, P1.TITLE AS TITLE, P1.PUBLICATION_DATE AS PUBLICATION_DATE, P1.PRICE AS PRICE, " +
-            "P2.ID AS TOPIC_ID, P2.NAME AS TOPIC " +
-            "FROM BOOKS B, PUBLICATION P1, PUBLICATION_TOPIC P2 " +
-            "WHERE P1.PUBLICATION_TOPIC = P2.ID AND P1.PUBLICATION_DATE = ?";
+    private static final String GET_BOOKS_BY_DATE = "SELECT B.ISBN_NO, B.EDITION, B.PUBLICATION_ID AS PUB_ID, P1.TITLE AS TITLE, P1.PUBLICATION_DATE AS PUB_DATE, P1.PRICE AS PRICE, P2.ID AS TOPIC_ID, P2.NAME AS TOPIC FROM BOOKS B, PUBLICATION P1, PUBLICATION_TOPIC P2 WHERE B.PUBLICATION_ID = P1.ID AND P1.PUBLICATION_TOPIC = P2.ID AND P1.PUBLICATION_DATE = ?";
+    private static final String CREATE_BOOK = "INSERT INTO BOOKS(PUBLICATION_ID, ISBN_NO, EDITION)  VALUES(?,?,?)";
+    private static final String DELETE_BOOK = "DELETE FROM BOOKS WHERE PUBLICATION_ID = ?";
 
     public List<Object> getAllBooks(){
 
@@ -122,8 +120,57 @@ public class BookService {
         }
     }
 
-    public List<Object> getBookByDate(){
-        return null;
+    public boolean createBook(Book book) {
+        boolean flag = false;
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_BOOK);
+            preparedStatement.setInt(1,book.getPublication().getPublicationId());
+            preparedStatement.setInt(2,book.getIsbnNumber());
+            preparedStatement.setString(3,book.getEdition());
+            int result = preparedStatement.executeUpdate();
+            flag = result==1? true:false;
+        }catch(Exception e){
+            if(connection!=null){
+                System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return flag;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch(Exception e){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return flag;
+        }
     }
 
+    public boolean deleteBook(Book book) {
+        boolean flag = false;
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BOOK);
+            preparedStatement.setInt(1,book.getPublication().getPublicationId());
+            int result = preparedStatement.executeUpdate();
+            flag = result ==1? true : false;
+        }catch (Exception e){
+            if(connection!=null){
+                System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return flag;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch(Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return flag;
+        }
+    }
 }
