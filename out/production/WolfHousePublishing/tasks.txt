@@ -60,7 +60,7 @@ Operation 3:
         3. delete distributor
         deleteDistributor()
         4. create order
-        createOrder()
+
         5. update balance on receipt of order
         6. generate bill
 
