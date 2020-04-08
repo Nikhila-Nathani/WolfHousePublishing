@@ -20,6 +20,7 @@ public class ArticleService {
     private static final String GET_ARTICLES_BY_DATE = "SELECT A.TITLE AS A_TITLE, A.DATE_OF_CREATION AS A_DATE_OF_CREATION FROM ARTICLE AS A WHERE  DATE_OF_CREATION = ?";
 
     private static final String CREATE_ARTICLE = "INSERT INTO ARTICLE (TITLE,DATE_OF_CREATION) VALUES(?,?)";
+    private static final String DELETE_ARTICLE = "DELETE  FROM ARTICLE WHERE TITLE=? AND DATE_OF_CREATION =?";
 
     public List<Object> getAllArticles(){
         List<Object> articles = new ArrayList<>();
@@ -128,4 +129,30 @@ public class ArticleService {
         }
     }
 
+    public boolean deleteArticle(Article article) {
+        boolean flag = false;
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ARTICLE);
+            preparedStatement.setString(1,article.getTitle());
+            preparedStatement.setDate(2,article.getDateOfCreation());
+            int result = preparedStatement.executeUpdate();
+            flag = result ==1?true:false;
+        }catch(Exception e){
+            if(connection!=null){
+                System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return flag;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch (Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return flag;
+        }
+    }
 }

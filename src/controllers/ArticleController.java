@@ -21,4 +21,8 @@ public class ArticleController {
     public List<Object> getArticlesByDate(String date) { return articleService.getArticlesByDate(date); }
 
     public boolean createArticle(Article article){ return articleService.createArticle(article); }
+
+    public boolean deleteArticle(Article article) {
+        return articleService.deleteArticle(article);
+    }
 }

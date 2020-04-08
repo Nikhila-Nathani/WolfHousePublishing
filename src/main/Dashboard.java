@@ -50,7 +50,6 @@ public class Dashboard {
         //getPublicationByDate();
         //getPublicationByTopic();
 
-
         //addArticlesToPeriodicPublication();
         // addChaptersToBook();
         //deleteChaptersFromBooks();
@@ -84,7 +83,14 @@ public class Dashboard {
 
     private static void deleteArticle() {
         System.out.println("------------------------ DELETE ARTICLE -------------------------------");
-
+        List<Object> articles = articleController.getAllArticles();
+        System.out.println("Enter the serial number of article you wish to delete : ");
+        String column = "SerialNo\tTitle\tDateOfCreation";
+        PageUtility.displayOptions(column,articles);
+        int serialNumber = scanner.nextInt();
+        if(articleController.deleteArticle((Article) articles.get(serialNumber-1))){
+            System.out.println("Article deleted successfully!");
+        }
     }
 
     private static void createArticle(){
