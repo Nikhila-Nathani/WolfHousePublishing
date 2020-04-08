@@ -21,6 +21,10 @@ public class DistributorService {
     private static final String CREATE_DISTRIBUTOR = "INSERT INTO DISTRIBUTOR(NAME,PHONE_NO,BALANCE,ACTIVE_STATUS,DISTRIBUTOR_TYPE) " +
             "VALUES(?,?,?,?,?)";
 
+    private static final String UPDATE_DISTRIBUTOR = "UPDATE DISTRIBUTOR SET NAME=?, PHONE_NO=?, BALANCE=?, ACTIVE_STATUS=?, DISTRIBUTOR_TYPE=?";
+
+    private static final String DELETE_DISTRIBUTOR = "DELETE FROM DISTRIBUTOR WHERE ID=?";
+
     public List<Distributor> getAllDistributors(){
         List<Distributor> distributors = new ArrayList<>();
         Connection connection = null;
@@ -50,32 +54,86 @@ public class DistributorService {
         }
     }
 
-    public boolean createDistributor(Distributor distributor){
+    public boolean createDistributor(Distributor distributor) {
         boolean flag = false;
         Connection connection = null;
-        try{
+        try {
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DISTRIBUTOR);
-            preparedStatement.setString(1,distributor.getDistributorName());
-            preparedStatement.setLong(2,distributor.getPhoneNumber());
-            preparedStatement.setInt(3,distributor.getBalance());
-            preparedStatement.setString(4,distributor.getActiveStatus());
+            preparedStatement.setString(1, distributor.getDistributorName());
+            preparedStatement.setLong(2, distributor.getPhoneNumber());
+            preparedStatement.setInt(3, distributor.getBalance());
+            preparedStatement.setString(4, distributor.getActiveStatus());
             preparedStatement.setInt(5, distributor.getDistributorType().getDistributorTypeId());
             int result = preparedStatement.executeUpdate();
-            flag = result ==1 ? true: false;
+            flag = result == 1 ? true : false;
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(Constants.CONNECTION_ERROR.getMessage());
             return flag;
-        }finally {
-            try{
+        } finally {
+            try {
                 DatabaseUtility.closeconnection();
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
             }
             return flag;
         }
     }
+
+    public boolean updateDistributor(Distributor distributor) {
+        boolean flag = false;
+        Connection connection = null;
+        try {
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_DISTRIBUTOR);
+            preparedStatement.setString(1, distributor.getDistributorName());
+            preparedStatement.setLong(2, distributor.getPhoneNumber());
+            preparedStatement.setInt(3, distributor.getBalance());
+            preparedStatement.setString(4, distributor.getActiveStatus());
+            preparedStatement.setInt(5, distributor.getDistributorType().getDistributorTypeId());
+            int result = preparedStatement.executeUpdate();
+            flag = result == 1 ? true : false;
+
+        } catch (Exception e) {
+            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            return flag;
+        } finally {
+            try {
+                DatabaseUtility.closeconnection();
+            } catch (Exception e) {
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return flag;
+        }
+    }
+
+    public boolean deleteDistributor(int id) {
+        boolean flag = false;
+        Connection connection = null;
+        try {
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_DISTRIBUTOR);
+            preparedStatement.setInt(1, id);
+            int result = preparedStatement.executeUpdate();
+            flag = result == 1 ? true : false;
+
+        } catch (Exception e) {
+            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            return flag;
+        } finally {
+            try {
+                DatabaseUtility.closeconnection();
+            } catch (Exception e) {
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return flag;
+        }
+    }
+
+
+
+
 
 
 }

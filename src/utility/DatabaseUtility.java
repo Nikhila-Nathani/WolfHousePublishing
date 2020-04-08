@@ -18,6 +18,9 @@ public class DatabaseUtility {
     }
 
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        DB_URL="jdbc:mariadb://classdb2.csc.ncsu.edu:3306/nnathan";
+        USERNAME="nnathan";
+        PASSWORD="200323507";
         Class.forName("org.mariadb.jdbc.Driver");
         connection = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
         return  connection;
