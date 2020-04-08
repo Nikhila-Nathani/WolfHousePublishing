@@ -2,33 +2,34 @@ package entity;
 
 public class WritesBook {
 
-    private Integer authorId;
-    private Integer publicationId;
+    private Author author;
+    private Book book;
 
-    public WritesBook(Integer authorId, Integer publicationId) {
-        this.authorId = authorId;
-        this.publicationId = publicationId;
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+
+    public WritesBook(Author author, Book book) {
+        this.author = author;
+        this.book = book;
     }
 
     @Override
     public String toString() {
-        return "Author Id : " + authorId +
-                "\t Publication Id :\t" + publicationId;
-    }
-
-    public Integer getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(Integer authorId) {
-        this.authorId = authorId;
-    }
-
-    public Integer getPublicationId() {
-        return publicationId;
-    }
-
-    public void setPublicationId(Integer publicationId) {
-        this.publicationId = publicationId;
+        return "\t"+book.getPublication().getPublicationId()+"\t"+book.getPublication().getPublicationTitle()+
+                "\t"+author.getEmployee().getEmployeeName();
     }
 }

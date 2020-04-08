@@ -18,6 +18,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Employee Id:\t "+employee.getEmployeeId()+"\t Employee Name:\t"+employee.getEmployeeName();
+        return "\t "+employee.getEmployeeId()+"\t\t"+employee.getEmployeeName();
     }
 }

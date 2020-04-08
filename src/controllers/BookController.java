@@ -1,5 +1,6 @@
 package controllers;
 
+import entity.Book;
 import services.BookService;
 
 import java.util.List;
@@ -23,4 +24,9 @@ public class BookController {
         return bookService.getBookSByDate(date);
     }
 
+    public boolean createBook(Book book){ return bookService.createBook(book);}
+
+    public boolean deleteBook(Book book) {
+        return bookService.deleteBook(book);
+    }
 }

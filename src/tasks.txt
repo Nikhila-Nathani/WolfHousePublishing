@@ -26,11 +26,13 @@ Operation 1: [COMPLETED]
         13. get editors for publication
             getEditorsForPublication()
 
-Operation 2:
+Operation 2: 11 done 7 rem
         1. add book
+           createBook()
         2. add book edition
         3. delete book edition
         4. delete book
+           deleteBook()
         5. add new issue
         6. delete issue
         7. add article
@@ -43,11 +45,13 @@ Operation 2:
         11. get book by date
             getBookByDate()
         12. get book by auhtor name
+            getBooksByAuthorName()
         13. get article by topic
             getArticlesByTopic()
         14. get article by date
             getArticlesByDate()
         15. get article by author name
+            getArticlesByAuthorName()
         16. process payment for employee
         17. update book edition
         18. update publication issue
