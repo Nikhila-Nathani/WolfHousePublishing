@@ -9,6 +9,9 @@ public class EmployeePayment {
         this.transaction = transaction;
     }
 
+    public EmployeePayment(){
+
+    }
     @Override
     public String toString() {
         return "Name : \t"+employee.getEmployeeName()+"\tAmount : \t"+transaction.getAmount()+"\tDate of Payment : \t"+

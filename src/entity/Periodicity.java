@@ -27,6 +27,6 @@ public class Periodicity {
 
     @Override
     public String toString() {
-        return "Id : \t" + periodicityId + "\tName : \t" + periodicityName;
+        return "\t" + periodicityId + "\t" + periodicityName;
     }
 }

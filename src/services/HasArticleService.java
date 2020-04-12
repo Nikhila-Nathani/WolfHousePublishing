@@ -52,6 +52,7 @@ public class HasArticleService {
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
+            
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ARTICLES_FOR_PERIODIC_PUBLICATION);
             preparedStatement.setInt(1,periodicPublication.getPublication().getPublicationId());
             ResultSet resultSet = preparedStatement.executeQuery();

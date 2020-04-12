@@ -15,12 +15,11 @@ public class Order {
     public String toString() {
         String result="";
 
-        result = "Id:\t"+orderId+"\tPrice:\t"+price+"\tOrder Date:\t"+orderDate+"\tShipping Cost:\t"+shippingCost+
-                "\tDelivery Date:\t"+deliveryDate;
+        result = "\t"+orderId+"\t"+price+"\t"+orderDate+"\t"+shippingCost+"\t"+deliveryDate;
         if (transactionId==null){
-            result+= "\t TRANSACTION ID NOT YET GENERATED";
+            result+= "\tTRANSACTION ID NOT YET GENERATED";
         } else{
-            result+="\tTransaction Id:\t"+transactionId;
+            result+="\t"+transactionId;
         }
 
         return result;
@@ -33,6 +32,18 @@ public class Order {
         this.shippingCost = shippingCost;
         this.deliveryDate = deliveryDate;
         this.transactionId = transactionId;
+    }
+
+    public Order(Float price, Date orderDate, Float shippingCost, Date deliveryDate, Integer transactionId) {
+        this.price = price;
+        this.orderDate = orderDate;
+        this.shippingCost = shippingCost;
+        this.deliveryDate = deliveryDate;
+        this.transactionId = transactionId;
+    }
+
+    public Order(Integer orderId){
+        this.orderId = orderId;
     }
 
     public Integer getOrderId() {
@@ -82,4 +93,5 @@ public class Order {
     public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
     }
+
 }

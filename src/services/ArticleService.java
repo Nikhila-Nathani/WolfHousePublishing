@@ -21,6 +21,7 @@ public class ArticleService {
 
     private static final String CREATE_ARTICLE = "INSERT INTO ARTICLE (TITLE,DATE_OF_CREATION) VALUES(?,?)";
     private static final String DELETE_ARTICLE = "DELETE  FROM ARTICLE WHERE TITLE=? AND DATE_OF_CREATION =?";
+    private static final String UPDATE_ARTICLE = "UPDATE ARTICLE SET DATE_OF_CREATION = ? WHERE TITLE = ?";
 
     public List<Object> getAllArticles(){
         List<Object> articles = new ArrayList<>();
@@ -150,6 +151,33 @@ public class ArticleService {
             try{
                 DatabaseUtility.closeconnection();
             }catch (Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return flag;
+        }
+    }
+
+    public boolean updateArticle(Article currentArticle) {
+        Connection connection = null;
+        boolean flag = false;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ARTICLE);
+            preparedStatement.setDate(1,currentArticle.getDateOfCreation());
+            preparedStatement.setString(2,currentArticle.getTitle());
+            int result = preparedStatement.executeUpdate();
+            flag = result == 1?true:false;
+        }catch(Exception e){
+            if(connection!=null){
+                System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return flag;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch(Exception e){
                 System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
             }
             return flag;

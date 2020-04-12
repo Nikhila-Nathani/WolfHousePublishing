@@ -12,6 +12,11 @@ public class OrderContains {
         this.numberOfCopies = numberOfCopies;
     }
 
+    public OrderContains(Publication publication, Integer numberOfCopies) {
+        this.publication = publication;
+        this.numberOfCopies = numberOfCopies;
+    }
+
     public Integer getOrderId() {
         return orderId;
     }

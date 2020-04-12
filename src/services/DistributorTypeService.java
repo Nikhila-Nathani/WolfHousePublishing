@@ -14,8 +14,8 @@ public class DistributorTypeService {
     private static final String GET_ALL_DISTRIBUTOR_TYPES = "SELECT * FROM DISTRIBUTOR_TYPE";
     private static final String CREATE_DISTRIBUTOR_TYPE = "INSERT INTO DISTRIBUTOR_TYPE(NAME) VALUES(?)";
 
-    public List<DistributorType> getAllDistributorTypes(){
-        List<DistributorType> distributorTypes = new ArrayList<>();
+    public List<Object> getAllDistributorTypes(){
+        List<Object> distributorTypes = new ArrayList<>();
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();

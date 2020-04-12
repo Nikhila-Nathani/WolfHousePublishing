@@ -1,5 +1,6 @@
 package controllers;
 
+import entity.Book;
 import entity.WritesBook;
 import services.WriteBookService;
 
@@ -20,5 +21,18 @@ public class WriteBookController {
             books.add(((WritesBook)wb).getBook());
         }
         return books;
+    }
+
+    public List<Object> getWritesBookForBook(Book book) {
+        return writeBookService.getWritesBookForBook(book);
+    }
+
+    public boolean deleteBookAuthorMappings(List<Object> writesBook) {
+        for(Object o : writesBook){
+            if(!writeBookService.deleteBookAuthorMapping((WritesBook)o)){
+                return false;
+            }
+        }
+        return  true;
     }
 }

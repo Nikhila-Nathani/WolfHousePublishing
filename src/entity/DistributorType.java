@@ -27,6 +27,6 @@ public class DistributorType {
 
     @Override
     public String toString() {
-        return "Id : \t" + distributorTypeId + "\tName : \t" + distributorTypeName;
+        return "\t" + distributorTypeId + "\t" + distributorTypeName;
     }
 }

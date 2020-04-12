@@ -25,4 +25,8 @@ public class ArticleController {
     public boolean deleteArticle(Article article) {
         return articleService.deleteArticle(article);
     }
+
+    public boolean updateArticle(Article currentArticle) {
+        return articleService.updateArticle(currentArticle);
+    }
 }

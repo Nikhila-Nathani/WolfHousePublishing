@@ -16,9 +16,7 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Distributor Id=\t" + distributorId +
-                "\t Location=\t" + location + "\t Contact Person=\t" + contactPerson +
-                "\t City=\t" + city ;
+        return "\t"+distributorId+"\t" + location + "\t" + city +"\t" + contactPerson ;
     }
 
     public Integer getDistributorId() {

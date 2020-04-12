@@ -29,4 +29,8 @@ public class BookController {
     public boolean deleteBook(Book book) {
         return bookService.deleteBook(book);
     }
+
+    public boolean updateBookEdition(Book book) {
+        return bookService.updateBookEdition(book);
+    }
 }

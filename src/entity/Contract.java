@@ -7,10 +7,20 @@ public class Contract {
     private Integer contractId;
     private Date startDate;
     private Date endDate;
-    private Float pay;
+    private Integer pay;
     private Employee employee;
+    private Integer transactionId;
 
-    public Contract(Integer contractId, Date startDate, Date endDate, Float pay, Employee employee) {
+    public Contract(Integer contractId, Date startDate, Date endDate, Integer pay, Employee employee,Integer transactionId) {
+        this.contractId = contractId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.pay = pay;
+        this.employee = employee;
+        this.transactionId = transactionId;
+    }
+
+    public Contract(Integer contractId, Date startDate, Date endDate, Integer pay, Employee employee) {
         this.contractId = contractId;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -42,11 +52,11 @@ public class Contract {
         this.endDate = endDate;
     }
 
-    public Float getPay() {
+    public Integer getPay() {
         return pay;
     }
 
-    public void setPay(Float pay) {
+    public void setPay(Integer pay) {
         this.pay = pay;
     }
 
@@ -58,14 +68,19 @@ public class Contract {
         this.employee = employee;
     }
 
+    public void setTransactionId(Integer transactionId){ this.transactionId = transactionId;}
+
+    public Integer getTransactionId() {
+        return transactionId;
+    }
+
     @Override
     public String toString() {
-        return "Contract Id:\t" + contractId +
-                "\tStart Date:\t" + startDate +
-                "\tEnd Date:\t" + endDate +
-                "\tPay:\t" + pay +
-                "\tEmployee Id:\t" + employee.getEmployeeId() +
-                "\tEmployee Name:\t" + employee.getEmployeeName() ;
-
+        return "\t" + contractId +
+                "\t" + startDate +
+                "\t" + endDate +
+                "\t" + pay +
+                "\t" + employee.getEmployeeId() +
+                "\t" + employee.getEmployeeName() ;
     }
 }

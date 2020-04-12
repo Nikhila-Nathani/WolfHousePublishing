@@ -108,7 +108,6 @@ public class PublicationService {
             preparedStatement.setInt(4,publication.getPrice());
 
             int result = preparedStatement.executeUpdate();
-            System.out.println("result : "+result);
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             if(resultSet.next()){
                 key = resultSet.getInt(1);

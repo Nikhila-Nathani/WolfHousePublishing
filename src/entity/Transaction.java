@@ -37,6 +37,10 @@ public class Transaction {
         this.amount = amount;
     }
 
+    public Transaction(Integer trasactionId){
+        this.trasactionId = trasactionId;
+    }
+
     @Override
     public String toString() {
         return "Id : \t"+trasactionId+"\tDate of Transaction : \t"+dateOfTransaction+"\tAmount : \t"+amount;

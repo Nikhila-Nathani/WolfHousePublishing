@@ -8,6 +8,7 @@ public class Distributor {
     private String activeStatus;
     private DistributorType distributorType;
 
+
     public Distributor(Integer distributorId, String distributorName, Long phoneNumber,
                        Integer balance, String activeStatus, DistributorType distributorType) {
         this.distributorId = distributorId;
@@ -18,11 +19,20 @@ public class Distributor {
         this.distributorType = distributorType;
     }
 
+    public Distributor(String distributorName, Long phoneNumber,
+                       Integer balance, String activeStatus, DistributorType distributorType) {
+        this.distributorName = distributorName;
+        this.phoneNumber = phoneNumber;
+        this.balance = balance;
+        this.activeStatus = activeStatus;
+        this.distributorType = distributorType;
+    }
+
     @Override
     public String toString() {
-        return "Id : \t" + distributorId + "\tName : \t" + distributorName+ "\tPhone Number : \t" + phoneNumber
-                + "\tBalance : \t" + balance+ "\tActive Status : \t" + activeStatus
-                + "\tDistributor Type : \t" + distributorType.getDistributorTypeName();
+        return "\t" + distributorId + "\t" + distributorName+ "\t" + phoneNumber
+                + "\t" + balance+ "\t" + activeStatus
+                + "\t" + distributorType.getDistributorTypeName();
     }
 
     public DistributorType getDistributorType() {
