@@ -7,7 +7,7 @@ public class Order {
     private Integer orderId;
     private Float price;
     private Date orderDate;
-    private Float shippingCost;
+    private int shippingCost;
     private Date deliveryDate;
     private Integer transactionId;
 
@@ -25,7 +25,7 @@ public class Order {
         return result;
     }
 
-    public Order(Integer orderId, Float price, Date orderDate, Float shippingCost, Date deliveryDate, Integer transactionId) {
+    public Order(Integer orderId, Float price, Date orderDate, int shippingCost, Date deliveryDate, Integer transactionId) {
         this.orderId = orderId;
         this.price = price;
         this.orderDate = orderDate;
@@ -34,7 +34,7 @@ public class Order {
         this.transactionId = transactionId;
     }
 
-    public Order(Float price, Date orderDate, Float shippingCost, Date deliveryDate, Integer transactionId) {
+    public Order(Float price, Date orderDate, int shippingCost, Date deliveryDate, Integer transactionId) {
         this.price = price;
         this.orderDate = orderDate;
         this.shippingCost = shippingCost;
@@ -70,11 +70,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public Float getShippingCost() {
+    public int getShippingCost() {
         return shippingCost;
     }
 
-    public void setShippingCost(Float shippingCost) {
+    public void setShippingCost(int shippingCost) {
         this.shippingCost = shippingCost;
     }
 

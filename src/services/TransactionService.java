@@ -91,7 +91,7 @@ public class TransactionService {
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TRANSACTION, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setFloat(2,order.getPrice());
+            preparedStatement.setFloat(2,order.getPrice()+order.getShippingCost());
             LocalDate localDate = LocalDate.now();
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -19,10 +19,11 @@ public class EditService {
     private static final String GET_EDITORS_FOR_PUBLICATION = "SELECT E2.ID AS ID, E2.NAME AS NAME, E2.PAY AS PAY, E2.PERIODICITY AS PERIODICITY FROM EDITS E1, EMPLOYEE E2, PUBLICATION P1 " +
             "WHERE E1.EDITOR_ID = E2.ID AND E1.PUBLICATION_ID = P1.ID AND P1.ID = ?";
 
-    public boolean assignEditorToPublication (Edits edit,Connection connection){
+    public boolean assignEditorToPublication (Edits edit){
+        Connection connection = null;
         boolean flag = false;
         try{
-            //connection = DatabaseUtility.getConnection();
+            connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(ASSIGN_EDITORS);
             preparedStatement.setInt(1,edit.getEditor().getEmployee().getEmployeeId());
             preparedStatement.setInt(2,edit.getPublication().getPublicationId());
@@ -61,7 +62,10 @@ public class EditService {
                 }
             }
         }catch(Exception e){
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if (connection == null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
         }finally {
             try{
                 DatabaseUtility.closeconnection();
@@ -87,7 +91,9 @@ public class EditService {
                 }
             }
         }catch(Exception e){
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection == null) {
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
         }finally {
             try{
                 DatabaseUtility.closeconnection();

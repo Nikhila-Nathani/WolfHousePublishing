@@ -17,6 +17,8 @@ public class OrderService {
     private static final String CREATE_ORDER = "INSERT INTO ORDERS (PRICE, ORDER_DATE, SHIPPING_COST, DELIVERY_DATE) VALUES (?,?,?,?)";
 
     private static final String GET_ALL_ORDERS_FOR_PAYMENT = "SELECT O.TRANSACTION_ID AS TID, O.ID AS ID, O.PRICE AS PRICE, O.SHIPPING_COST AS SC, O.DELIVERY_DATE AS DD, O.ORDER_DATE AS OD FROM ORDERS O WHERE ID NOT IN (SELECT OP.ORDER_ID FROM ORDER_PAYMENT OP)";
+    private static final String GET_ALL_PAID_ORDERS = "SELECT O.TRANSACTION_ID AS TID, O.ID AS ID, O.PRICE AS PRICE, O.SHIPPING_COST AS SC, O.DELIVERY_DATE AS DD, O.ORDER_DATE AS OD FROM ORDERS O WHERE ID IN (SELECT OP.ORDER_ID FROM ORDER_PAYMENT OP)";
+
 
     public boolean deleteOrder(Order order){
         boolean flag = false;
@@ -52,7 +54,7 @@ public class OrderService {
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ORDER, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setFloat(1,order.getPrice());
             preparedStatement.setDate(2,order.getOrderDate());
-            preparedStatement.setFloat(3,order.getShippingCost());
+            preparedStatement.setInt(3,order.getShippingCost());
             preparedStatement.setDate(4,order.getDeliveryDate());
             int result = preparedStatement.executeUpdate();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -86,7 +88,35 @@ public class OrderService {
             if(resultSet!=null){
                 while(resultSet.next()){
                     orders.add(new Order(resultSet.getInt("ID"),resultSet.getFloat("PRICE"),
-                    resultSet.getDate("OD"),resultSet.getFloat("SC"),resultSet.getDate("DD"),resultSet.getInt("TID")));
+                    resultSet.getDate("OD"),resultSet.getInt("SC"),resultSet.getDate("DD"),resultSet.getInt("TID")));
+                }
+            }
+        }catch (Exception e){
+            if(connection == null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return orders;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch (Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return orders;
+        }
+    }
+
+    public List<Object> getAllPaidOrders() {
+        List<Object> orders = new ArrayList<>();
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_PAID_ORDERS);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet!=null){
+                while(resultSet.next()){
+                    orders.add(new Order(resultSet.getInt("ID"),resultSet.getFloat("PRICE"),
+                            resultSet.getDate("OD"),resultSet.getInt("SC"),resultSet.getDate("DD"),resultSet.getInt("TID")));
                 }
             }
         }catch (Exception e){

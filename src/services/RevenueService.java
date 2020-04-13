@@ -18,16 +18,15 @@ public class RevenueService {
 
     private static final String TOTAL_REVENEUE = "SELECT SUM(T.AMOUNT) FROM TRANSACTIONS T, ORDER_PAYMENT OP WHERE T.ID = OP.TRANSACTION_ID";
 
-    private static final String TOTAL_EXPENSE = "SELECT (A.EMPLOYEE_PAYMENT+B.SHIPPING_COST) FROM" +
+    private static final String TOTAL_EXPENSE = "SELECT (A.EMPLOYEE_PAYMENT) FROM" +
             "(SELECT SUM(AMOUNT) AS EMPLOYEE_PAYMENT FROM TRANSACTIONS T WHERE T.ID IN (" +
             " SELECT T.ID FROM TRANSACTIONS T, EMPLOYEE_PAYMENT EP WHERE EP.TRANSACTION_ID = T.ID" +
             " UNION" +
-            " SELECT T.ID AS P1 FROM TRANSACTIONS T, CONTRACT C WHERE C.TRANSACTION_ID = T.ID)) AS A," +
-            "(SELECT SUM(SHIPPING_COST) AS SHIPPING_COST FROM ORDERS) AS B";
+            " SELECT T.ID AS P1 FROM TRANSACTIONS T, CONTRACT C WHERE C.TRANSACTION_ID = T.ID)) AS A,";
 
     private static final String TOTAL_REVENUE_PER_CITY = "SELECT CITY AS CITY, SUM(O.PRICE) AS TOTAL_PRICE FROM ORDERS_PLACED OP, ORDERS O, ADDRESS A WHERE O.ID = OP.ORDER_ID AND OP.LOCATION = A.LOCATION   GROUP BY (A.CITY)";
 
-    private static final String PRICE_PER_DISTRIBUTOR_PER_PUBLICATION =  "SELECT D.NAME, P.TITLE, SUM(OC.NO_OF_COPIES) AS TOTAL_COPIES, P.PRICE*SUM(OC.NO_OF_COPIES) AS VALUE FROM PUBLICATION P,ORDERS_PLACED OP, ORDER_CONTAINS OC, DISTRIBUTOR D WHERE OP.ORDER_ID = OC.ORDER_ID AND OP.DISTRIBUTOR_ID = D.ID AND OC.PUBLICATION_ID = P.ID GROUP BY (D.ID), (OC.PUBLICATION_ID)";
+    private static final String PRICE_PER_DISTRIBUTOR_PER_PUBLICATION =  "SELECT D.NAME, P.TITLE, SUM(OC.NO_OF_COPIES) AS TOTAL_COPIES, P.PRICE*SUM(OC.NO_OF_COPIES) AS VALUE, MONTH(O.ORDER_DATE) AS MONTH FROM PUBLICATION P,ORDERS O,ORDERS_PLACED OP, ORDER_CONTAINS OC, DISTRIBUTOR D WHERE OP.ORDER_ID = OC.ORDER_ID AND OP.DISTRIBUTOR_ID = D.ID AND OC.PUBLICATION_ID = P.ID AND O.ID=OP.ORDER_ID GROUP BY (D.ID), (OC.PUBLICATION_ID),(MONTH(O.ORDER_DATE))";
 
     private static final String TOTAL_PAYMENTS_PER_WORK_TYPE = "SELECT A.BOOK_SUM, B.ARTICLE_SUM, C.EDIT_SUM FROM\n"+
             "(SELECT SUM(AMOUNT) AS BOOK_SUM FROM EMPLOYEE_PAYMENT EP, TRANSACTIONS T WHERE EP.EMPLOYEE_ID IN(\n"+
@@ -199,10 +198,12 @@ public class RevenueService {
                     String title = resultSet.getString("TITLE");
                     int totalCopies = resultSet.getInt("TOTAL_COPIES");
                     int value = resultSet.getInt("VALUE");
+                    int month = resultSet.getInt("MONTH");
                     List<Object> list = new ArrayList<>();
                     list.add(title);
                     list.add(totalCopies);
                     list.add(value);
+                    list.add(month);
                     List<List<Object>> current;
                     if(answer.containsKey(dname)){
                          current = answer.get(dname);

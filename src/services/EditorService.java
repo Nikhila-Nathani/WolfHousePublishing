@@ -28,7 +28,10 @@ public class EditorService {
                 }
             }
         }catch (Exception e) {
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection== null ){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
             return editors;
         }finally {
             try{

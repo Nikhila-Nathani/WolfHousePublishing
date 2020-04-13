@@ -17,9 +17,9 @@ public class PublicationController {
         return publicationService.getAllPublications();
     }
 
-    public boolean createPublication(Publication publication){
-        return publicationService.createPublication(publication);
-    }
+//    public boolean createPublication(Publication publication){
+//        return publicationService.createPublicationAndGetId(publication);
+//    }
 
 
     public boolean updatePublication(Publication publication){

@@ -28,4 +28,8 @@ public class OrderController {
     public List<Object> getAllOrdersForPayment() {
         return orderService.getAllOrdersForPayment();
     }
+
+    public List<Object> getAllPaidOrders() {
+        return orderService.getAllPaidOrders();
+    }
 }

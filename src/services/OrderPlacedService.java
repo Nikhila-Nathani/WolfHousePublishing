@@ -126,4 +126,30 @@ public class OrderPlacedService {
             return distributorId;
         }
     }
+
+    public void updateLocation(Order order, String location) {
+        boolean flag = false;
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_DISTRIBUTOR_ID);
+            preparedStatement.setString(1,location);
+            preparedStatement.setInt(2,order.getOrderId());
+            int result = preparedStatement.executeUpdate();
+            flag = result == 1? true :false;
+        }catch (Exception e){
+            if(connection!=null){
+                System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch (Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+        }
+    }
 }

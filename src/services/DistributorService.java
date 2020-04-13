@@ -133,11 +133,14 @@ public class DistributorService {
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_DISTRIBUTOR);
             preparedStatement.setInt(1,distributor.getDistributorId());
-            System.out.println(preparedStatement.toString());
+//            System.out.println(preparedStatement.toString());
             int result = preparedStatement.executeUpdate();
             flag = result ==1 ? true: false ;
         } catch(Exception e){
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection == null ){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
             return flag;
         } finally{
             try{

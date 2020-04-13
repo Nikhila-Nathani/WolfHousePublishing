@@ -18,30 +18,10 @@ public class EditsController {
     }
 
     public Edits assignEditorToPublication(List<Edits> edits){
-        Connection connection = null;
-        try {
-            connection = DatabaseUtility.getConnection();
-            for(Edits e : edits){
-                if(!editService.assignEditorToPublication(e,connection)){
-                    connection.rollback();
-                    System.out.println("Rolling back");
-                    return e;
-                }
+        for(Edits e : edits){
+            if(!editService.assignEditorToPublication(e)){
+                return e;
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            DatabaseUtility.closeconnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }

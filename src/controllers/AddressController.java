@@ -25,4 +25,7 @@ public class AddressController {
         return addressService.getAddressForDistributor(currentDistributor);
     }
 
+    public boolean updateAddressForDistributor(Address address, String oldLocation){
+        return addressService.updateAddressForDistributor(address, oldLocation);
+    }
 }

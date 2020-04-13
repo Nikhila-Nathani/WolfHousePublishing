@@ -29,4 +29,10 @@ public class OrderPlacedController {
     public int getDistributorIdForOrder(Order order) {
         return orderPlacedService.getDistributorIdForOrder(order);
     }
+
+    public void updateLocation(List<Order> order, String location) {
+        for(Order o:order){
+            orderPlacedService.updateLocation(o,location);
+        }
+    }
 }

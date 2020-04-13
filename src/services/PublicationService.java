@@ -47,7 +47,10 @@ public class PublicationService {
                 }
             }
         } catch (Exception e) {
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection == null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
             return publications;
         }finally {
             try{
@@ -59,39 +62,39 @@ public class PublicationService {
         }
     }
 
-    public boolean createPublication(Publication publication){
-        Connection connection =null;
-        boolean flag = false;
-        try{
-            connection = DatabaseUtility.getConnection();
-
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PUBLICATION);
-
-            preparedStatement.setString(1,publication.getPublicationTitle());
-            preparedStatement.setDate(2,publication.getPublicationDate());
-            preparedStatement.setInt(3,publication.getPublicationTopic().getPublicationTopicId());
-            preparedStatement.setInt(4,publication.getPrice());
-
-            int result = preparedStatement.executeUpdate();
-            flag = result ==1 ? true: false;
-
-        } catch(Exception e){
-            if(connection!=null){
-                System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
-            }else{
-                System.out.println(Constants.CONNECTION_ERROR.getMessage());
-            }
-            return false;
-        } finally {
-            try{
-                DatabaseUtility.closeconnection();
-            }catch(Exception e){
-                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
-            }
-            return flag;
-        }
-
-    }
+//    public boolean createPublication(Publication publication){
+//        Connection connection =null;
+//        boolean flag = false;
+//        try{
+//            connection = DatabaseUtility.getConnection();
+//
+//            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_PUBLICATION);
+//
+//            preparedStatement.setString(1,publication.getPublicationTitle());
+//            preparedStatement.setDate(2,publication.getPublicationDate());
+//            preparedStatement.setInt(3,publication.getPublicationTopic().getPublicationTopicId());
+//            preparedStatement.setInt(4,publication.getPrice());
+//
+//            int result = preparedStatement.executeUpdate();
+//            flag = result ==1 ? true: false;
+//
+//        } catch(Exception e){
+//            if(connection!=null){
+//                System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
+//            }else{
+//                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+//            }
+//            return false;
+//        } finally {
+//            try{
+//                DatabaseUtility.closeconnection();
+//            }catch(Exception e){
+//                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+//            }
+//            return flag;
+//        }
+//
+//    }
 
 
     public int createPublicationAndGetId(Publication publication){
@@ -214,7 +217,10 @@ public class PublicationService {
                 }
             }
         }catch (Exception e) {
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection==null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
             return publication;
         }finally {
             try{
@@ -244,7 +250,9 @@ public class PublicationService {
                 }
             }
         }catch (Exception e) {
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection == null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
             return publications;
         }finally {
             try{

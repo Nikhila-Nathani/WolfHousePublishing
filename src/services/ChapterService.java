@@ -38,8 +38,8 @@ public class ChapterService {
             preparedStatement.setString(3,chapter.getText());
             int result = preparedStatement.executeUpdate();
             flag = result == 1?true:false;
-        }catch (Exception e){
-            if(connection!=null){
+        }catch (Exception e) {
+            if(connection!=null) {
                 System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
             }else{
                 System.out.println(Constants.CONNECTION_ERROR.getMessage());

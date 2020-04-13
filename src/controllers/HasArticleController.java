@@ -1,5 +1,6 @@
 package controllers;
 
+import entity.Article;
 import entity.HasArticle;
 import entity.PeriodicPublication;
 import services.HasArticleService;
@@ -33,5 +34,13 @@ public class HasArticleController {
             }
         }
         return null;
+    }
+
+    public List<HasArticle> getPeriodicPublicationForArticles(Article article) {
+        return hasArticleService.getPeriodicPublicationForArticles(article);
+    }
+
+    public boolean deletePublicationsForArticles(Article currentArticle) {
+        return hasArticleService.deletePerioidicPublicationForArticles(currentArticle);
     }
 }

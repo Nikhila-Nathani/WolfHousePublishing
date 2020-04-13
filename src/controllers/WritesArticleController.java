@@ -1,5 +1,6 @@
 package controllers;
 
+import entity.Article;
 import entity.WritesArticle;
 import entity.WritesBook;
 import services.WritesArticleService;
@@ -21,5 +22,13 @@ public class WritesArticleController {
             articles.add(((WritesArticle)wb).getArticleTitle());
         }
         return articles;
+    }
+
+    public List<WritesArticle> getAuthorsByArticle(Article article) {
+        return writesArticleService.getAuthorsByArticle(article);
+    }
+
+    public boolean deleteWritesArticles(Article article) {
+        return writesArticleService.deleteWritesArticleForArticle(article);
     }
 }

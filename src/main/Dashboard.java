@@ -30,7 +30,7 @@ public class Dashboard {
     private  static HasArticleController hasArticleController;
     private static  BookController bookController;
     private static  ChapterController chapterController;
-    private  static AuthorController authorController;
+    private static AuthorController authorController;
     private static  WriteBookController writeBookController;
     private static WritesArticleController writesArticleController;
     private static PeriodicityController periodicityController;
@@ -112,33 +112,36 @@ public class Dashboard {
                         option = displayMenuAndGetOption(publicationMenu);
                         switch (option){
                             case 1:
-                                createPublication();
+                                viewAllPublications();
                                 break;
                             case 2:
-                                updatePublication();
+                                createPublication();
                                 break;
                             case 3:
-                                getPublicationByTitle();
+                                updatePublication();
                                 break;
                             case 4:
-                                getPublicationByDate();
+                                getPublicationByTitle();
                                 break;
                             case 5:
-                                getPublicationByTopic();
+                                getPublicationByDate();
                                 break;
                             case 6:
-                                getPublicationById();
+                                getPublicationByTopic();
                                 break;
                             case 7:
-                                assignEditors();
+                                getPublicationById();
                                 break;
                             case 8:
-                                getEditorsForPublication();
+                                assignEditors();
                                 break;
                             case 9:
-                                getPublicationForEditors();
+                                getEditorsForPublication();
                                 break;
                             case 10:
+                                getPublicationForEditors();
+                                break;
+                            case 11:
                                 break publication;
                         }
                     }
@@ -149,21 +152,24 @@ public class Dashboard {
                         option = displayMenuAndGetOption(periodicPublicationMenu);
                         switch (option){
                             case 1:
-                                addNewIssue();
+                                viewAllPeriodicPublications();
                                 break;
                             case 2:
-                                updateIssue();
+                                addNewIssue();
                                 break;
                             case 3:
-                                deleteIssue();
+                                updateIssue();
                                 break;
                             case 4:
-                                addArticlesToPeriodicPublication();
+                                deleteIssue();
                                 break;
                             case 5:
-                                deleteArticlesForPeriodicPublication();
+                                addArticlesToPeriodicPublication();
                                 break;
                             case 6:
+                                deleteArticlesForPeriodicPublication();
+                                break;
+                            case 7:
                                 break periodicPublication;
                         }
                     }
@@ -174,36 +180,39 @@ public class Dashboard {
                         option = displayMenuAndGetOption(bookMenu);
                         switch (option){
                             case 1:
-                                createBook();
+                                viewAllBooks();
                                 break;
                             case 2:
-                                deleteBook();
+                                createBook();
                                 break;
                             case 3:
-                                getBookByTopic();
+                                deleteBook();
                                 break;
                             case 4:
-                                getBooksByAuthorName();
+                                getBookByTopic();
                                 break;
                             case 5:
                                 getBooksByAuthorName();
                                 break;
                             case 6:
-                                addEdition();
+                                getBookByDate();
                                 break;
                             case 7:
-                                updateEdition();
+                                addEdition();
                                 break;
                             case 8:
-                                deleteEdition();
+                                updateEdition();
                                 break;
                             case 9:
-                                addChaptersToBook();
+                                deleteEdition();
                                 break;
                             case 10:
-                                deleteChaptersFromBooks();
+                                addChaptersToBook();
                                 break;
                             case 11:
+                                deleteChaptersFromBooks();
+                                break;
+                            case 12:
                                 break book;
                         }
                     }
@@ -214,24 +223,27 @@ public class Dashboard {
                         option = displayMenuAndGetOption(articleMenu);
                         switch (option) {
                             case 1:
-                                createArticle();
+                                viewAllArticles();
                                 break;
                             case 2:
-                                updateArticle();
+                                createArticle();
                                 break;
                             case 3:
-                                deleteArticle();
+                                updateArticle();
                                 break;
                             case 4:
-                                getArticlesByTopic();
+                                deleteArticle();
                                 break;
                             case 5:
-                                getArticlesByAuthorName();
+                                getArticlesByTopic();
                                 break;
                             case 6:
-                                getArticlesByDate();
+                                getArticlesByAuthorName();
                                 break;
                             case 7:
+                                getArticlesByDate();
+                                break;
+                            case 8:
                                 break article;
                         }
                     }
@@ -242,15 +254,18 @@ public class Dashboard {
                         option = displayMenuAndGetOption(distributorMenu);
                         switch (option) {
                             case 1:
-                                addDistributor();
+                                viewAllDistributors();
                                 break;
                             case 2:
-                                updateDistributor();
+                                addDistributor();
                                 break;
                             case 3:
-                                deleteDistributor();
+                                updateDistributor();
                                 break;
                             case 4:
+                                deleteDistributor();
+                                break;
+                            case 5:
                                 break distributor;
                         }
                     }
@@ -261,16 +276,18 @@ public class Dashboard {
                         option = displayMenuAndGetOption(orderMenu);
                         switch (option) {
                             case 1:
-                                createOrder();
+                                viewAllPaidOrders();
                                 break;
                             case 2:
-                                generateBill();
-
+                                viewAllUnpaidOrders();
                                 break;
                             case 3:
-                                System.out.println(orderMenu.get(option - 1));
+                                createOrder();
                                 break;
                             case 4:
+                                generateBill();
+                                break;
+                            case 5:
                                 break order;
                         }
                     }
@@ -305,15 +322,9 @@ public class Dashboard {
                                 getPaymentsPerWorkType();
                                 break;
                             case 9:
-                                System.out.println(revenueMenu.get(option-1));
-                                break;
-                            case 10:
-                                System.out.println(revenueMenu.get(option-1));
-                                break;
-                            case 11:
                                 processEmployeePayment();
                                 break;
-                            case 12:
+                            case 10:
                                 break revenue;
                         }
                     }
@@ -323,6 +334,59 @@ public class Dashboard {
             }
         }
         System.out.println("Thank you for visiting WolfPrint Publishing House.");
+    }
+
+    private static void viewAllUnpaidOrders() {
+        System.out.println("------------------ALL UNPAID ORDERS ---------------------");
+        List<Object> orders = orderController.getAllOrdersForPayment();
+        String columns = "SerialNo\tId\tPrice\tOrder date\tShipping Cost\tDeliveryDate\tTransactionId";
+        PageUtility.displayOptions(columns,orders);
+    }
+
+    private static void viewAllPaidOrders() {
+        System.out.println("------------------ALL PAID ORDERS ---------------------");
+        List<Object> orders = orderController.getAllPaidOrders();
+        String columns = "SerialNo\tId\tPrice\tOrder date\tShipping Cost\tDeliveryDate\tTransactionId";
+        PageUtility.displayOptions(columns,orders);
+    }
+
+    private static void viewAllDistributors() {
+        System.out.println("------------------ALL DISTRIBUTORS ---------------------");
+        List<Object> distributors = distributorController.getAllDistributors();
+        System.out.println("Enter the serial number of the distributor who wants to place an order : ");
+        String columns = "SerialNo\tId\tName\tPhoneNumber\tBalance\tActiveStatus\tDistributorType";
+        PageUtility.displayOptions(columns,distributors);
+    }
+
+    private static void viewAllBooks() {
+        System.out.println("------------------ALL BOOKS ---------------------");
+        List<Object> books = bookController.getAllBooks();
+        String columns = "SerialNo\tId\tTitle\tTopic\tISBN\tEdition";
+        PageUtility.displayOptions(columns,books);
+    }
+
+    private static void viewAllArticles() {
+        System.out.println("------------------ALL ARTICLES ---------------------");
+        List<Object> articles = articleController.getAllArticles();
+        String column = "SerialNo\tTitle\tDateOfCreation";
+        PageUtility.displayOptions(column,articles);
+    }
+
+
+    private static void viewAllPeriodicPublications() {
+        System.out.println("------------------ALL PERIODIC PUBLICATIONS ---------------------");
+        List<Object> periodicPublications = periodicPublicationController.getAllPeriodicPublications();
+        String columns = "SerialNo\tID\tTitle\tPublication Date\tPrice\tTopic\tPeriodicity";
+        PageUtility.displayOptions(columns,periodicPublications);
+
+    }
+
+    private static void viewAllPublications() {
+        System.out.println("------------------ALL PUBLICATIONS ---------------------");
+        List<Object> publications = publicationController.getAllPublications();
+        String columns1 = "SerialNo\tId\tTitle\tPublicationDate\tPrice\tPublicationTopic";
+        PageUtility.displayOptions(columns1,publications);
+
     }
 
 
@@ -337,7 +401,7 @@ public class Dashboard {
     private static void getPerDistributorPerPublicationPrice() {
         System.out.println("------GET NUMBER OF PUBLICATIONS, COPIES AND PRICE PER DISTRIBUTOR -----------");
         Map<String, List<List<Object>>> answer = revenueController.getPerDistributorPerPublicationPrice();
-        System.out.println("DistributorName\tPublicationTitle\tNoOfCopies\tValue");
+        System.out.println("DistributorName\tPublicationTitle\tNoOfCopies\tValue\tMonth");
         for(String key : answer.keySet()){
             String output = "";
             List<List<Object>> current = answer.get(key);
@@ -376,7 +440,7 @@ public class Dashboard {
         Order order = (Order)orders.get(serialNumber-1);
         //System.out.println("order id "+order.getOrderId());
         int distributorId = orderPlacedController.getDistributorIdForOrder(order);
-        System.out.println("Dis id "+distributorId);
+        System.out.println("Distributor id:  "+distributorId);
         Distributor distributor = null;
         if(distributorId!=-1){
             distributor = distributorController.getDistributorById(distributorId);
@@ -384,20 +448,19 @@ public class Dashboard {
         }
         //create transaction
         int transactionId = transactionController.createTransactionForOrder(order);
-        System.out.println("T id "+transactionId);
+        System.out.println("Transaction Id: "+transactionId);
         if(transactionId!=-1){
             OrderPayment orderPayment = new OrderPayment(order,new Transaction(transactionId));
             if(orderPaymentController.createOrderPayment(orderPayment)){
-                //System.out.println("op updated ");
                 if(distributor!=null){
-                    distributor.setBalance((int) (distributor.getBalance()-order.getPrice()));
+                    distributor.setBalance((int) (distributor.getBalance()-order.getPrice()-order.getShippingCost()));
                     distributorController.updateBalance(distributor);
+                    System.out.println("Bill generated for Order id : "+order.getOrderId()+" for distributor :"+distributor.getDistributorName());
+                    System.out.println("Transaction of amount "+order.getPrice()+order.getShippingCost()+" generated for the order with id "+order.getOrderId()+" with transaction id :"+transactionId);
+                    System.out.println("Updated balance of distributor :"+(distributor.getBalance()-order.getPrice()-order.getShippingCost()));
                 }
-                //System.out.println("Bill generated succesfully!");
             }
         }
-        //update order payment
-        // update balance
     }
 
 
@@ -405,7 +468,7 @@ public class Dashboard {
         System.out.println("-------------------------------- CREATE ORDER--------------------------");
         List<Object> distributors = distributorController.getAllDistributors();
         System.out.println("Enter the serial number of the distributor who wants to place an order : ");
-        String columns = "SerialNo\tId\tName\tPhoneNumber\tBalance\tActiveStatus\tDistibutorType";
+        String columns = "SerialNo\tId\tName\tPhoneNumber\tBalance\tActiveStatus\tDistributorType";
         PageUtility.displayOptions(columns,distributors);
         int serialNumber = scanner.nextInt();
         float price = 0;
@@ -451,10 +514,16 @@ public class Dashboard {
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Date dateOfOrder = Date.valueOf(dtf.format(localDate));
-        float shippingCost = 50;
-        int orderId = orderController.createOrder(new Order(price,dateOfOrder,shippingCost,dateOfOrder,-1));
-        //System.out.println("ORder Id : "+orderId);
-        //TODO CHANGE THE DELIVERY DATE IN SERVICE
+        //take input sc.. tu nai hota na ..to project hi nai banta
+        System.out.println("Enter the shipping cost : ");
+        int shippingCost = scanner.nextInt();
+        System.out.println("Enter the required delivery date (YYYY-MM-DD): ");
+        String date = scanner.next();
+        Date deliveryDate = Date.valueOf(date);
+//        System.out.println("You entered "+deliveryDate);
+        price += shippingCost;
+        Order o1 = new Order(price,dateOfOrder,shippingCost,deliveryDate,-1);
+        int orderId = orderController.createOrder(o1);
         if(orderId !=-1){
             for(int i=0;i<orderContains.size();i++){
                 orderContains.get(i).setOrderId(orderId);
@@ -473,7 +542,10 @@ public class Dashboard {
     }
 
     private static void processEmployeePayment(){
-        List<Object> result = contractController.getContractsForDate(Date.valueOf("2020-04-30"));
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Date dateOfTransaction = Date.valueOf(dtf.format(localDate));
+        List<Object> result = contractController.getContractsForDate(dateOfTransaction);
         List<Contract> contracts = new ArrayList<>();
         for(Object o : result){
             System.out.println(o.toString());
@@ -483,7 +555,7 @@ public class Dashboard {
         contractController.updateTransactionIdsForContracts(contracts1);
 
 
-        List<Employee> permanentEmployees = employeeController.getPermanentEmployeesForPayment(Date.valueOf("2020-04-20"));
+        List<Employee> permanentEmployees = employeeController.getPermanentEmployeesForPayment(dateOfTransaction);
         for(Employee o : permanentEmployees){
             System.out.println(o.toString());
         }
@@ -562,26 +634,26 @@ public class Dashboard {
         Distributor currentDistributor = (Distributor) distributors.get(serialNumber - 1);
         List<Order> orders = orderPlacedController.getOrdersForDistributor(currentDistributor);
         if(orderPlacedController.deleteOrdersPlacesForDistributor(currentDistributor)){
-            System.out.println("Deleted successfully from orderPlaced");
+//            System.out.println("Deleted successfully from orderPlaced");
             Order result = orderPaymentController.deleteTransactionsForOrders(orders);
             if(result != null){
                 System.out.println("Deletion of distributor failed due to some reason!");
             }else{
-                System.out.println("Deleted successfully from orderPayment");
+//                System.out.println("Deleted successfully from orderPayment");
                 result = orderContainsController.deleteOrderContainsForOrder(orders);
                 if(result!=null){
                     System.out.println("Deletion of distributor failed due to some reason!");
                 }else{
-                    System.out.println("Deleted successfully from orderContains");
+//                    System.out.println("Deleted successfully from orderContains");
                     result = orderController.deleteOrders(orders);
                     if(result!=null){
-                        System.out.println("Deletion of distributor failed due to some reason!");
+//                        System.out.println("Deletion of distributor failed due to some reason!");
                     }else{
-                        System.out.println("Deleted successfully from order");
+//                        System.out.println("Deleted successfully from order");
                         if(addressController.deleteAddressForDistributor(currentDistributor)){
-                            System.out.println("Deleted successfully from address");
+//                            System.out.println("Deleted successfully from address");
                             if(distributorController.deleteDistributor(currentDistributor)){
-                                System.out.println("Deleted successfully from distributor");
+//                                System.out.println("Deleted successfully from distributor");
                                 System.out.println("The distributor has been deleted successfully!");
                             }
                         }
@@ -626,7 +698,7 @@ public class Dashboard {
             currentDistributor.setPhoneNumber(phoneNo);
         }
 
-        System.out.println("Do you want to update 'Actice Status'? (Y/N) ");
+        System.out.println("Do you want to update 'Active Status'? (Y/N) ");
         option = scanner.next();
         while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
             System.out.println("Please enter valid option (Y/N).");
@@ -644,13 +716,81 @@ public class Dashboard {
             System.out.println("Please enter valid option (Y/N).");
             option = scanner.next();
         }
-        if(option.equalsIgnoreCase("y")){
+        if(option.equalsIgnoreCase("y")) {
             List<Object> distributorTypes = distributorTypeController.getAllDistributorTypes();
-            System.out.println("Enter the serial Number of the distributortype you wish to assign for this distributor : ");
+            System.out.println("Enter the serial Number of the distributor type you wish to assign for this distributor : ");
             columns = "SerialNo\tId\tName";
             PageUtility.displayOptions(columns,distributorTypes);
             int newTopic = scanner.nextInt();
             currentDistributor.setDistributorType((DistributorType) distributorTypes.get(newTopic-1));
+        }
+
+        //option = do u want to update address.
+        System.out.println("Do you want to update address of this distributor? (Y/N)");
+        option = scanner.next();
+        while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
+            System.out.println("Please enter valid option (Y/N).");
+            option = scanner.next();
+        }
+        if(option.equalsIgnoreCase("Y")){
+            List<Object> addresses = addressController.getAddressForDistributor(currentDistributor);
+            System.out.println("Enter the seriel number of the address you want to update: ");
+            columns = "SerialNo\tDistributorId\tLocation\tCity\tContactPerson";
+            PageUtility.displayOptions(columns,addresses);
+            serialNumber = scanner.nextInt();
+            Address currentAddress = (Address) addresses.get(serialNumber-1);
+
+
+            System.out.println("Do you want to update Location? (Y/N)");
+            option = scanner.next();
+            while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
+                System.out.println("Please enter valid option (Y/N).");
+                option = scanner.next();
+            }
+            String oldLocation = currentAddress.getLocation();
+            if (option.equalsIgnoreCase("Y")){
+                System.out.println("Enter new location : ");
+                String dummy = scanner.nextLine();
+                String location = scanner.nextLine();
+                currentAddress.setLocation(location);
+
+            }
+
+            System.out.println("Do you want to update City? (Y/N)");
+            option = scanner.next();
+            while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
+                System.out.println("Please enter valid option (Y/N).");
+                option = scanner.next();
+            }
+
+            if(option.equalsIgnoreCase("Y")){
+                System.out.println("Enter new City : ");
+                String dummy = scanner.nextLine();
+                String city = scanner.nextLine();
+                currentAddress.setCity(city);
+            }
+
+
+            System.out.println("Do you want to update Contact person? (Y/N)");
+            option = scanner.next();
+            while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
+                System.out.println("Please enter valid option (Y/N).");
+                option = scanner.next();
+            }
+            if(option.equalsIgnoreCase("Y")){
+                System.out.println("Enter new Contact person : ");
+                String dummy = scanner.nextLine();
+                String cp = scanner.nextLine();
+                currentAddress.setContactPerson(cp);
+            }
+            boolean result = addressController.updateAddressForDistributor(currentAddress, oldLocation);
+            if(!result){
+                System.out.println("Address has been updated successfully!");
+            }
+            List<Order> order = orderPlacedController.getOrdersForDistributor(currentDistributor);
+            if(order.size()>0){
+                orderPlacedController.updateLocation(order,currentAddress.getLocation());
+            }
         }
 
         if(distributorController.updateDistributor(currentDistributor)){
@@ -677,7 +817,7 @@ public class Dashboard {
         Distributor d = new Distributor(name,phoneNumber,0,distrirbutorStatus,(DistributorType) distributorTypes.get(dType-1));
         int distributorId =distributorController.createDistributor(d);
         if(distributorId==-1){
-            System.out.println("Crestion of new distributor failed!");
+            System.out.println("Creation of new distributor failed!");
         }else{
             System.out.println("Distributor created successfully!");
             System.out.println("Enter the address details for the distributor.");
@@ -725,7 +865,7 @@ public class Dashboard {
         if(bookController.deleteBook(book)) {
             if (publicationController.deletePublication(book.getPublication())) {
                 System.out.println("The edition " + book.getEdition() + " for the book "
-                        + book.getPublication().getPublicationTitle() + " has been deleted sucessfully!");
+                        + book.getPublication().getPublicationTitle() + " has been deleted successfully!");
             }
         }
     }
@@ -862,6 +1002,7 @@ public class Dashboard {
     private static void addNewIssue() {
         System.out.println("------------------------ ADD NEW ISSUE (PERIODIC PUBLICATION) -------------------------------");
         System.out.println("Enter the Title for the Publication : ");
+        String dummy = scanner.nextLine();
         String title = scanner.nextLine();
         System.out.println("Enter the price for the publication : ");
         Integer price = scanner.nextInt();
@@ -900,6 +1041,8 @@ public class Dashboard {
         // 3. Update the list and set article title with the updated title.
         // 4. Delete data from writes_article and has_article.
         // 5. Insert new article, and new writes article and has articles
+        // ARTICLE HAS TITLE AS PRIMARY KEY WHICH IS USED AS  A FOREIGN KEY IN ALL THE ABOVE TABLES
+        //AND WE R NOT UPDATING THE TITLE HERE. SO I THINK THIS IS AN OLD TODO.
         System.out.println("-----------------------------UPDATE ARTICLE -------------------");
         List<Object> articles = articleController.getAllArticles();
         System.out.println("Enter the serial number of article you wish to update : ");
@@ -914,7 +1057,7 @@ public class Dashboard {
             option = scanner.next();
         }
         if(option.equalsIgnoreCase("y")){
-            System.out.println("Enter new date of creartion (YYYY-MM-DD): \t");
+            System.out.println("Enter new date of creation (YYYY-MM-DD): \t");
             String newTitle = scanner.nextLine();
             String newDate = scanner.nextLine();
             currentArticle.setDateOfCreation(Date.valueOf(newDate));
@@ -946,7 +1089,7 @@ public class Dashboard {
     private static void getArticlesByAuthorName() {
         System.out.println("-----------------------------GET ARTICLES BY AUTHOR NAME -------------------");
         List<Object> authors = authorController.getAllAuthors();
-        System.out.println("Enter the serial number of author for whom you will like to fetch the articles :");
+        System.out.println("Enter the serial number of author for whom you would like to fetch the articles :");
         String columns = "SerialNo\tId\tName";
         PageUtility.displayOptions(columns,authors);
         int serialNumber = scanner.nextInt();
@@ -971,21 +1114,21 @@ public class Dashboard {
         Integer bookSerialNumber = scanner.nextInt();
         Book book = (Book)books.get(bookSerialNumber-1);
         List<Object> writesBook = writeBookController.getWritesBookForBook(book);
-        if(writeBookController.deleteBookAuthorMappings(writesBook)){
+        if(writeBookController.deleteBookAuthorMappings(writesBook)) {
             if(bookController.deleteBook(book)){
                 System.out.println("Book deleted successfully!");
                 if(publicationController.deletePublication(book.getPublication())){
                     //System.out.println("The corresponding publication for the book deleted!");
                     List<Object> chapters = chapterController.getChaptersForABook(book);
-                    List<Chapter> chaptersToBeDelted = new ArrayList<>();
+                    List<Chapter> chaptersToBeDeleted = new ArrayList<>();
                     for (Object c : chapters){
                         chapters.add((Chapter)c);
                     }
-                    Chapter result = chapterController.deleteChapters(chaptersToBeDelted);
+                    Chapter result = chapterController.deleteChapters(chaptersToBeDeleted);
                     if(result==null){
                         System.out.println("Chapters for the given book deleted successfully!");
                     }else{
-                        System.out.println("Deletetion failed for the given object :\n"+result.toString());
+                        System.out.println("Deletion failed for the given object :\n"+result.toString());
                         System.out.println("All pairs before this have been deleted!");
                         System.out.println("All pairs after this have been skipped!");
                     }
@@ -998,6 +1141,7 @@ public class Dashboard {
     private static void createBook(){
         System.out.println("------------------------ CREATE BOOK -------------------------------");
         System.out.println("Enter the Title for the Publication : ");
+        String dummy = scanner.nextLine();
         String title = scanner.nextLine();
         System.out.println("Enter the price for the publication : ");
         Integer price = scanner.nextInt();
@@ -1005,7 +1149,7 @@ public class Dashboard {
         String date = scanner.next();
         Date date1 = Date.valueOf(date);
         List<Object> publicationTopics = publicationTopicController.getAllPublicationTopics();
-        System.out.println("Select the serial no of publication topic for which you want to create  a book :");
+        System.out.println("Select the serial number of publication topic for which you want to create  a book :");
         String columns = "SerialNo\tId\tName";
         PageUtility.displayOptions(columns,publicationTopics);
         Integer topicId = scanner.nextInt();
@@ -1014,8 +1158,7 @@ public class Dashboard {
         int publicationId = publicationController.createPublicationAndGetId(publication);
         if(publicationId==-1){
             System.out.println("Entry failed for Publication table!");
-        }else{
-            publication.setPublicationId(publicationId);
+        }else { publication.setPublicationId(publicationId);
             System.out.println("Enter the ISBN for the book :");
             Integer ISBN = scanner.nextInt();
             System.out.println("Enter the edition of the book : ");
@@ -1031,20 +1174,34 @@ public class Dashboard {
 
     }
     private static void deleteArticle() {
+        //TODO: Delete from writesArticle table (check TODO of updateArticle)
+
         System.out.println("------------------------ DELETE ARTICLE -------------------------------");
         List<Object> articles = articleController.getAllArticles();
-        System.out.println("Enter the serial number of article you wish to delete : ");
+        System.out.println("Enter the serial number of the article you wish to delete : ");
         String column = "SerialNo\tTitle\tDateOfCreation";
         PageUtility.displayOptions(column,articles);
         int serialNumber = scanner.nextInt();
-        if(articleController.deleteArticle((Article) articles.get(serialNumber-1))){
-            System.out.println("Article deleted successfully!");
+        Article currentArticle = (Article)articles.get(serialNumber-1);
+        //I HAVE THE ARTICLE OBJECT..I CAN DIRECTLY RUN ...DELETE FROM TABLE WHERE ARTICLE_TITLE = ?
+        //WILL THAT WORK?
+
+//        List<WritesArticle> writesArticles = writesArticleController.getAuthorsByArticle(currentArticle);
+//        List<HasArticle> hasArticles = hasArticleController.getPeriodicPublicationForArticles(currentArticle);
+        if(writesArticleController.deleteWritesArticles(currentArticle)){
+            if(hasArticleController.deletePublicationsForArticles(currentArticle)){
+                if(articleController.deleteArticle((Article) articles.get(serialNumber-1))){
+                    System.out.println("Article deleted successfully!");
+                }
+            }
         }
+
     }
 
     private static void createArticle(){
         System.out.println("------------------------ CREATE ARTICLE -------------------------------");
         System.out.println("Enter the title for article : ");
+        String dummy = scanner.nextLine();
         String title = scanner.nextLine();
         System.out.println("Enter the date of creation for article (YYYY-MM-DD) :");
         String date = scanner.next();
@@ -1055,14 +1212,13 @@ public class Dashboard {
     }
 
     private static void getArticlesByDate() {
-        //TODO Articles have date of creation of its own as well as date of creation of publication (IF they are mapped in has_articles table)
-        //This function is written considering date of creation
+        //This function is written considering date of creation of the article
         System.out.println("----------------------GET ARTICLES BY DATE -------------------------");
         System.out.println("Enter the date of creation of the article you want to retrieve (YYYY-MM-DD): ");
         String date = scanner.next();
         List<Object> articles = articleController.getArticlesByDate(date);
-        if(articles.size()!=0){
-            System.out.println("The books for the given topic are as follows : ");
+        if(articles.size()!=0) {
+            System.out.println("The articles for the provided date are as follows : ");
             String columns1 = "SerialNo\tTitle\tTDateOFCreation";
             PageUtility.displayOptions(columns1,articles);
         }else{
@@ -1073,13 +1229,13 @@ public class Dashboard {
     private static void getArticlesByTopic() {
         System.out.println("----------------------GET ARTICLES BY TOPIC -------------------------");
         List<Object> publicationTopics = publicationTopicController.getAllPublicationTopics();
-        System.out.println("Select the serial no of publication topic for which you want to retireve the articles :");
+        System.out.println("Select the serial no of publication topic for which you want to retrieve the articles :");
         String columns = "SerialNo\tId\tName";
         PageUtility.displayOptions(columns,publicationTopics);
         Integer topicId = scanner.nextInt();
         List<Object> articles = articleController.getArticlesByTopic(((PublicationTopic)publicationTopics.get(topicId-1)).getPublicationTopicName());
         if(articles.size()!=0){
-            System.out.println("The books for the given topic are as follows : ");
+            System.out.println("The articles for the topic are as follows : ");
             String columns1 = "SerialNo\tTitle\tTDateOFCreation";
             PageUtility.displayOptions(columns1,articles);
         }else{
@@ -1160,8 +1316,6 @@ public class Dashboard {
     }
 
     private static void addChaptersToBook() {
-        //TODO check the foreign key constraint on book_id of chapter
-        /*chapter table right now contains publication_ids which are not books (which should not happen)*/
         System.out.println("---------------------- ADD CHAPTERS TO BOOKS -------------------------");
         List<Object> books = bookController.getAllBooks();
         List<Chapter> chapters = new ArrayList<>();
@@ -1205,7 +1359,7 @@ public class Dashboard {
             System.out.println("All the chapters for the respective books have been added!");
         }else{
             System.out.println("Addition of chapter failed for the following chapter :\n"+result.toString());
-            System.out.println("All the previous pairs have been successfully added.!");
+            System.out.println("All the previous pairs have been successfully added!");
             System.out.println("All the later pairs have been skipped!");
         }
     }
@@ -1251,9 +1405,9 @@ public class Dashboard {
         HasArticle result = hasArticleController.addArticleToPeriodicPublication(hasArticles);
         if(result == null){
             System.out.println("Articles have been assigned to given periodic publications successfully!");
-        }else{
+        }else {
             System.out.println("Assignment failed for the given pair :\n"+result.toString());
-            System.out.println("All the previous pairs have been successfully added.!");
+            System.out.println("All the previous pairs have been successfully added!");
             System.out.println("All the later pairs have been skipped!");
         }
     }
@@ -1271,17 +1425,22 @@ public class Dashboard {
             int num = scanner.nextInt();
             PeriodicPublication periodicPublication = (PeriodicPublication) periodicPublications.get(num-1);
             articles = hasArticleController.getArticlesForPeriodicPublication(periodicPublication);
-            System.out.println("Enter the articles you wish to delete for the given periodic publication :");
-            System.out.println("Enter the serial numbers for articles to be deleted for the current periodic publication (seperated by \",\") :");
-            String columns2 = "SerialNo\tTitle\tDate Of creation";
-            PageUtility.displayOptions(columns2,articles);
-            String articleSerialNumbers = scanner.next();
-            String articlesToBeDeleted[] = articleSerialNumbers.split(",");
+//            System.out.println("Enter the articles you wish to delete for the given periodic publication :");
+            if(articles.size()==0){
+                System.out.println("There are no articles assigned to this publication");
+            } else {
+                System.out.println("Enter the serial numbers for articles to be deleted for the current periodic publication (seperated by \",\") :");
+                String columns2 = "SerialNo\tTitle\tDate Of creation";
+                PageUtility.displayOptions(columns2,articles);
+                String articleSerialNumbers = scanner.next();
+                String articlesToBeDeleted[] = articleSerialNumbers.split(",");
 
-            for(String id : articlesToBeDeleted){
-                String title = ((Article)(articles.get(Integer.parseInt(id)-1))).getTitle();
-                hasArticles.add(new HasArticle(periodicPublication,title));
+                for(String id : articlesToBeDeleted){
+                    String title = ((Article)(articles.get(Integer.parseInt(id)-1))).getTitle();
+                    hasArticles.add(new HasArticle(periodicPublication,title));
+                }
             }
+
             System.out.println("Do you wish to delete articles for some more periodic publications (Y/N)?");
             String option = scanner.next();
             while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
@@ -1357,6 +1516,7 @@ public class Dashboard {
     public static void getPublicationByTitle(){
         System.out.println("---------------------- GET PUBLICATION BY TITLE -------------------------");
         System.out.println("Enter the title of the publication you want to retrieve : ");
+        String dummy = scanner.nextLine();
         String title = scanner.nextLine();
         Publication publication = publicationController.getPublicationByTitle(title);
         if(publication!=null){
@@ -1423,9 +1583,9 @@ public class Dashboard {
             String columns = "SerialNo\tId\tName";
             PageUtility.displayOptions(columns,publicationTopics);
             int newTopic = scanner.nextInt();
-            System.out.println(publicationTopics.get(newTopic-1).toString());
+//            System.out.println(publicationTopics.get(newTopic-1).toString());
             currentPublication.setPublicationTopic((PublicationTopic) publicationTopics.get(newTopic-1));
-            System.out.println(currentPublication.toString());
+//            System.out.println(currentPublication.toString());
         }
         if (publicationController.updatePublication(currentPublication)){
             System.out.println("Publication updated successfully!");
@@ -1435,6 +1595,7 @@ public class Dashboard {
     public static void createPublication(){
         System.out.println("---------------------- CREATE PUBLICATION -------------------------");
         System.out.println("Enter the Title for the Publication : ");
+        String dummy = scanner.nextLine();
         String title = scanner.nextLine();
         System.out.println("Enter the price for the publication : ");
         Integer price = scanner.nextInt();
@@ -1442,13 +1603,16 @@ public class Dashboard {
         String date = scanner.next();
         Date date1 = Date.valueOf(date);
         List<Object> publicationTopics = publicationTopicController.getAllPublicationTopics();
-        System.out.println("Enter the serial Number of the publication topic you wish to assign for this publication : ");
+        System.out.println("Enter the serial number of the publication topic you wish to assign for this publication : ");
         String columns = "SerialNo\tId\tName";
         PageUtility.displayOptions(columns,publicationTopics);
         int option = scanner.nextInt();
         PublicationTopic currentPublicationTopic = (PublicationTopic) publicationTopics.get(option-1);
-        if(publicationController.createPublication(new Publication(title,date1,price,currentPublicationTopic))){
-            System.out.println("Publication created successfully!");
+        int publicationId = publicationController.createPublicationAndGetId(new Publication(title,date1,price,currentPublicationTopic));
+        if(publicationId !=-1){
+            System.out.println("The following publication has been created successfully!");
+            Publication publication = publicationController.getPublicationById(publicationId);
+            System.out.println(publication.toString());
         }
     }
 
@@ -1539,6 +1703,7 @@ public class Dashboard {
 
     private static void initPublicationMenu() {
         publicationMenu = new ArrayList<>();
+        publicationMenu.add("View all publications.");
         publicationMenu.add("Enter new publication.");
         publicationMenu.add("Update publication.");
         publicationMenu.add("Get publication by TITLE.");
@@ -1551,10 +1716,11 @@ public class Dashboard {
         publicationMenu.add("Go Back.");
     }
 
-    private static void initPeriodicPublicationMenu(){
+    private static void initPeriodicPublicationMenu() {
         periodicPublicationMenu = new ArrayList<>();
+        periodicPublicationMenu.add("View all periodic publications");
         periodicPublicationMenu.add("Add new issue.");
-        periodicPublicationMenu.add("Update isse.");
+        periodicPublicationMenu.add("Update issue.");
         periodicPublicationMenu.add("Delete issue.");
         periodicPublicationMenu.add("Add articles to periodic publication.");
         periodicPublicationMenu.add("Delete articles to periodic publication.");
@@ -1563,6 +1729,7 @@ public class Dashboard {
 
     private static void initBookMenu(){
         bookMenu = new ArrayList<>();
+        bookMenu.add("View all Books");
         bookMenu.add("Add Book.");
         bookMenu.add("Delete Book.");
         bookMenu.add("Get Book by TOPIC.");
@@ -1572,12 +1739,13 @@ public class Dashboard {
         bookMenu.add("Update Book Edition.");
         bookMenu.add("Delete Book Edition.");
         bookMenu.add("Add chapters to Book.");
-        bookMenu.add("Delete chapters to Book.");
+        bookMenu.add("Delete chapters of Book.");
         bookMenu.add("Go Back.");
     }
 
     private static void initArticleMenu(){
         articleMenu = new ArrayList<>();
+        articleMenu.add("View all articles.");
         articleMenu.add("Add article.");
         articleMenu.add("Update article.");
         articleMenu.add("Delete article.");
@@ -1591,6 +1759,7 @@ public class Dashboard {
 
     private static void initDistributorMenu(){
         distributorMenu = new ArrayList<>();
+        distributorMenu.add("View all active distributors.");
         distributorMenu.add("Add distributor.");
         distributorMenu.add("Update distributor.");
         distributorMenu.add("Delete distributor.");
@@ -1598,9 +1767,10 @@ public class Dashboard {
     }
     private static void initOrderMenu(){
         orderMenu = new ArrayList<>();
-        orderMenu.add("Create Order.");
-        orderMenu.add("Generate Bill.");
-        orderMenu.add("Update Balance on receipt.");
+        orderMenu.add("View paid orders");
+        orderMenu.add("View unpaid orders.");
+        orderMenu.add("Create Order and update Balance");
+        orderMenu.add("Generate Bill and update Balance");
         orderMenu.add("Go Back.");
     }
     private static void initRevenueMenu(){
@@ -1612,17 +1782,17 @@ public class Dashboard {
         revenueMenu.add("Total revenue per location.");
         revenueMenu.add("Total revenue per distributor.");
         revenueMenu.add("Total current number of distributors");
-        revenueMenu.add("Total per time period and per work type (BOOK authorship)");
-        revenueMenu.add("Total per time period and per work type (ARTICLE authorship)");
-        revenueMenu.add("Total per time period and per work type (EDITOR authorship)");
-        revenueMenu.add("Proceee Employee Payments.");
+        revenueMenu.add("Total payment per time period and per work type");
+//        revenueMenu.add("Total payment per time period and per work type (ARTICLE authorship)");
+//        revenueMenu.add("Total payment per time period and per work type (EDITOR authorship)");
+        revenueMenu.add("Process Employee Payments.");
         revenueMenu.add("Go Back.");
     }
 
     private static int displayMenuAndGetOption(List<String> menu){
-        System.out.println("-----------------------------------------------------------------------");
-        System.out.println("MENU");
-        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("|-----------------------------------------------------------------------|");
+        System.out.println("|-----------------------------MENU--------------------------------------|");
+        System.out.println("|-----------------------------------------------------------------------|");
         String option ="";
         int finalOption =0;
         for(int i=0;i<menu.size();i++){

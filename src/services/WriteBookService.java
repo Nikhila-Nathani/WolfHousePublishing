@@ -58,7 +58,7 @@ public class WriteBookService {
     public List<Object> getWritesBookForBook(Book book) {
         List<Object> writesBook = new ArrayList<>();
         Connection connection = null;
-        try{
+        try {
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GET_WRITESBOOK_FOR_BOOK);
             preparedStatement.setInt(1,book.getPublication().getPublicationId());
@@ -76,7 +76,10 @@ public class WriteBookService {
                 }
             }
         }catch (Exception e){
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection == null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+
             return writesBook;
         }finally {
             try{
