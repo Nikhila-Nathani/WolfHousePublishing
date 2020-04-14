@@ -12,10 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Dashboard {
 
@@ -56,6 +53,8 @@ public class Dashboard {
     private static List<String> orderMenu;
     private static List<String> revenueMenu;
 
+    private static Map<Integer,Integer> calendar ;
+
     static{
         scanner = new Scanner(System.in);
         publicationController = new PublicationController();
@@ -83,6 +82,8 @@ public class Dashboard {
         transactionController = new TransactionController();
         employeeController = new EmployeeController();
         employeePaymentsController = new EmployeePaymentController();
+
+        initCalendar();
         initPublicationMenu();
         initMainMenu();
         initPeriodicPublicationMenu();
@@ -92,7 +93,6 @@ public class Dashboard {
         initOrderMenu();
         initRevenueMenu();
     }
-
 
 
     public static void main(String args[]) throws SQLException, ClassNotFoundException {
@@ -353,7 +353,6 @@ public class Dashboard {
     private static void viewAllDistributors() {
         System.out.println("------------------ALL DISTRIBUTORS ---------------------");
         List<Object> distributors = distributorController.getAllDistributors();
-        System.out.println("Enter the serial number of the distributor who wants to place an order : ");
         String columns = "SerialNo\tId\tName\tPhoneNumber\tBalance\tActiveStatus\tDistributorType";
         PageUtility.displayOptions(columns,distributors);
     }
@@ -402,6 +401,7 @@ public class Dashboard {
         System.out.println("------GET NUMBER OF PUBLICATIONS, COPIES AND PRICE PER DISTRIBUTOR -----------");
         Map<String, List<List<Object>>> answer = revenueController.getPerDistributorPerPublicationPrice();
         System.out.println("DistributorName\tPublicationTitle\tNoOfCopies\tValue\tMonth");
+        System.out.println("-----------------------------------------------------------------------");
         for(String key : answer.keySet()){
             String output = "";
             List<List<Object>> current = answer.get(key);
@@ -417,9 +417,17 @@ public class Dashboard {
 
 
     private static void getTotalRevenuePerCity(){
-        Map<String,Integer> answer = revenueController.getTotalRevenuePerCity();
+
+
         System.out.println("----------------TOTAL REVENUE PER CITY  ------------------------");
+        System.out.println("Enter the year and month for which you wish to see the total revenue :(YYYY-MM)");
+        String date = scanner.next();
+        String values[] = date.split("-");
+        Date startDate = Date.valueOf(date+"-01");
+        Date endDate = Date.valueOf(date+"-"+Integer.toString(calendar.get(Integer.parseInt(values[1]))));
+        Map<String,Integer> answer = revenueController.getTotalRevenuePerCity(startDate,endDate);
         System.out.println("SerialNo\tCity\tPrice");
+
         System.out.println("--------------------------------------------------------------------");
         int count = 1;
         for(String key : answer.keySet()){
@@ -452,12 +460,17 @@ public class Dashboard {
         if(transactionId!=-1){
             OrderPayment orderPayment = new OrderPayment(order,new Transaction(transactionId));
             if(orderPaymentController.createOrderPayment(orderPayment)){
-                if(distributor!=null){
-                    distributor.setBalance((int) (distributor.getBalance()-order.getPrice()-order.getShippingCost()));
-                    distributorController.updateBalance(distributor);
-                    System.out.println("Bill generated for Order id : "+order.getOrderId()+" for distributor :"+distributor.getDistributorName());
-                    System.out.println("Transaction of amount "+order.getPrice()+order.getShippingCost()+" generated for the order with id "+order.getOrderId()+" with transaction id :"+transactionId);
-                    System.out.println("Updated balance of distributor :"+(distributor.getBalance()-order.getPrice()-order.getShippingCost()));
+                order.setTransactionId(transactionId);
+                if(orderController.updateTransactionId(order)){
+                    if(distributor!=null){
+//                        int payReceievd = (int) ((float)order.getPrice()+order.getShippingCost());
+//                        System.out.println("PR : "+payReceievd);
+//                        distributor.setBalance((int) (distributor.getBalance()-(order.getPrice()+order.getShippingCost())));
+                        distributorController.updateBalance(distributor);
+                        System.out.println("Bill generated for Order id : "+order.getOrderId()+" for distributor :"+distributor.getDistributorName());
+                        System.out.println("Transaction of amount "+(order.getPrice()+order.getShippingCost())+" generated for the order with id "+order.getOrderId()+" with transaction id :"+transactionId);
+                        System.out.println("Updated balance of distributor :"+(distributor.getBalance()));
+                    }
                 }
             }
         }
@@ -521,7 +534,7 @@ public class Dashboard {
         String date = scanner.next();
         Date deliveryDate = Date.valueOf(date);
 //        System.out.println("You entered "+deliveryDate);
-        price += shippingCost;
+//        price += shippingCost;
         Order o1 = new Order(price,dateOfOrder,shippingCost,deliveryDate,-1);
         int orderId = orderController.createOrder(o1);
         if(orderId !=-1){
@@ -533,8 +546,9 @@ public class Dashboard {
                 //System.out.println("ORder Contains done : "+orderId);
                 OrderPlaced orderPlaced = new OrderPlaced(currentDistributor.getDistributorId(),orderId,currentAddress.getLocation());
                 if(orderPlacedController.createOrderPlaced(orderPlaced)){
-                    System.out.println("Order has been successfully placed!");
-                    currentDistributor.setBalance(currentDistributor.getBalance()+(int)price);
+                    System.out.println("Order has been successfully placed for distributor : "+currentDistributor.getDistributorId()+"! Your order id is : "+orderId);
+
+                    currentDistributor.setBalance(currentDistributor.getBalance()+(int)price+shippingCost);
                     distributorController.updateBalance(currentDistributor);
                 }
             }
@@ -576,7 +590,12 @@ public class Dashboard {
 
     private static void totalExpense() {
         System.out.println("---------------------------TOTAL EXPENSE OF THE PUBLISHING HOUSE--------------------------");
-        int totalExpense = revenueController.getTotalExpense();
+        System.out.println("Enter the year and month for which you wish to see the total revenue :(YYYY-MM)");
+        String date = scanner.next();
+        String values[] = date.split("-");
+        Date startDate = Date.valueOf(date+"-01");
+        Date endDate = Date.valueOf(date+"-"+Integer.toString(calendar.get(Integer.parseInt(values[1]))));
+        long totalExpense = revenueController.getTotalExpense(startDate,endDate);
         if(totalExpense != -1){
             System.out.println("Total Expense for the publishing house is : "+totalExpense  );
         }
@@ -584,15 +603,26 @@ public class Dashboard {
 
     private static void totalRevenue() {
         System.out.println("---------------------------TOTAL REVENUE OF THE PUBLISHING HOUSE--------------------------");
-        int totalRevenue = revenueController.getTotalRevenue();
+        System.out.println("Enter the year and month for which you wish to see the total revenue :(YYYY-MM)");
+        String date = scanner.next();
+        String values[] = date.split("-");
+        Date startDate = Date.valueOf(date+"-01");
+        Date endDate = Date.valueOf(date+"-"+Integer.toString(calendar.get(Integer.parseInt(values[1]))));
+        int totalRevenue = revenueController.getTotalRevenue(startDate,endDate);
         if(totalRevenue != -1){
             System.out.println("Total Revenue for the publishing house is : "+totalRevenue  );
         }
     }
 
     private static void getTotalRevenuePerDistributor() {
-        Map<Integer,Map<String,Integer>> answer = revenueController.getTotalRevenuePerDistributor();
         System.out.println("----------------TOTAL REVENUE PER DISTRIBUTOR ------------------------");
+        System.out.println("Enter the year and month for which you wish to see the total revenue :(YYYY-MM)");
+        String date = scanner.next();
+        String values[] = date.split("-");
+        Date startDate = Date.valueOf(date+"-01");
+        Date endDate = Date.valueOf(date+"-"+Integer.toString(calendar.get(Integer.parseInt(values[1]))));
+        Map<Integer,Map<String,Integer>> answer = revenueController.getTotalRevenuePerDistributor(startDate,endDate);
+
         System.out.println("SerialNo\tDistributor\tPrice");
         System.out.println("--------------------------------------------------------------------");
         int count = 1;
@@ -606,8 +636,13 @@ public class Dashboard {
     }
 
     private static void getTotalRevenuePerLocation() {
-        Map<String,Integer> answer = revenueController.getTotalRevenuePerLocation();
         System.out.println("----------------TOTAL REVENUE PER LOCATION ------------------------");
+        System.out.println("Enter the year and month for which you wish to see the total revenue :(YYYY-MM)");
+        String date = scanner.next();
+        String values[] = date.split("-");
+        Date startDate = Date.valueOf(date+"-01");
+        Date endDate = Date.valueOf(date+"-"+Integer.toString(calendar.get(Integer.parseInt(values[1]))));
+        Map<String,Integer> answer = revenueController.getTotalRevenuePerLocation(startDate,endDate);
         System.out.println("SerialNo\tLocation\tPrice");
         System.out.println("--------------------------------------------------------------------");
         int count = 1;
@@ -986,7 +1021,7 @@ public class Dashboard {
         List<HasArticle> hasArticlesToBeDeleted = new ArrayList<>();
         for(Object o : hasArticles ){
             Article a = (Article)o;
-            hasArticlesToBeDeleted.add((new HasArticle(periodicPublication,a.getTitle())));
+            hasArticlesToBeDeleted.add((new HasArticle(periodicPublication.getPublication().getPublicationId(),a.getArticleId())));
         }
         HasArticle result = hasArticleController.deleteArticlesForPeriodicPublication(hasArticlesToBeDeleted);
         if(result == null){
@@ -999,7 +1034,7 @@ public class Dashboard {
         }
     }
 
-    private static void addNewIssue() {
+    private static void addNewIssue() throws SQLException {
         System.out.println("------------------------ ADD NEW ISSUE (PERIODIC PUBLICATION) -------------------------------");
         System.out.println("Enter the Title for the Publication : ");
         String dummy = scanner.nextLine();
@@ -1035,23 +1070,32 @@ public class Dashboard {
 
 
     private static void updateArticle(){
-        //TODO Follow the following flow :
-        // 1. Retrieve writes article list
-        // 2. Retrieve has_article list.
-        // 3. Update the list and set article title with the updated title.
-        // 4. Delete data from writes_article and has_article.
-        // 5. Insert new article, and new writes article and has articles
-        // ARTICLE HAS TITLE AS PRIMARY KEY WHICH IS USED AS  A FOREIGN KEY IN ALL THE ABOVE TABLES
-        //AND WE R NOT UPDATING THE TITLE HERE. SO I THINK THIS IS AN OLD TODO.
         System.out.println("-----------------------------UPDATE ARTICLE -------------------");
         List<Object> articles = articleController.getAllArticles();
         System.out.println("Enter the serial number of article you wish to update : ");
-        String column = "SerialNo\tTitle\tDateOfCreation";
+        String column = "SerialNo\tId\tTitle\tDateOfCreation";
         PageUtility.displayOptions(column,articles);
         int serialNumber = scanner.nextInt();
+
         Article currentArticle = (Article)articles.get(serialNumber-1);
-        System.out.println("Do you want to update 'Date of Creation'? (Y/N) ");
+
+
+        System.out.println("Do you want to update 'Title'? (Y/N) ");
         String option = scanner.next();
+        while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
+            System.out.println("Please enter valid option (Y/N).");
+            option = scanner.next();
+        }
+        if(option.equalsIgnoreCase("y")){
+            System.out.println("Enter new title: \t");
+            String newTitle = scanner.nextLine();
+            String title = scanner.nextLine();
+            currentArticle.setTitle(title);
+        }
+
+
+        System.out.println("Do you want to update 'Date of Creation'? (Y/N) ");
+        option = scanner.next();
         while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
             System.out.println("Please enter valid option (Y/N).");
             option = scanner.next();
@@ -1062,10 +1106,25 @@ public class Dashboard {
             String newDate = scanner.nextLine();
             currentArticle.setDateOfCreation(Date.valueOf(newDate));
         }
+
+
+        System.out.println("Do you want to update 'Text'? (Y/N) ");
+        option = scanner.next();
+        while(!option.equalsIgnoreCase("Y") && !option.equalsIgnoreCase("N")){
+            System.out.println("Please enter valid option (Y/N).");
+            option = scanner.next();
+        }
+        if(option.equalsIgnoreCase("y")){
+            System.out.println("Enter new text : \t");
+            String newTitle = scanner.nextLine();
+            String text = scanner.nextLine();
+            currentArticle.setText(text);
+        }
         if(articleController.updateArticle(currentArticle)){
             System.out.println("Article updated successfully!");
         }
     }
+
 
     private static void getBooksByAuthorName() {
         System.out.println("-----------------------------GET BOOKS BY AUTHOR NAME -------------------");
@@ -1099,7 +1158,7 @@ public class Dashboard {
             System.out.println("There are no articles yet written by : "+a.getEmployee().getEmployeeName());
         }else{
             System.out.println("The articles written by '"+a.getEmployee().getEmployeeName()+"' are as follows : ");
-            String columns1 = "SerialNo\tTitle";
+            String columns1 = "SerialNo\tId\tTitle\tDate of creation";
             PageUtility.displayOptions(columns1,articles);
         }
 
@@ -1179,23 +1238,18 @@ public class Dashboard {
         System.out.println("------------------------ DELETE ARTICLE -------------------------------");
         List<Object> articles = articleController.getAllArticles();
         System.out.println("Enter the serial number of the article you wish to delete : ");
-        String column = "SerialNo\tTitle\tDateOfCreation";
+        String column = "SerialNo\tId\tTitle\tDateOfCreation";
         PageUtility.displayOptions(column,articles);
         int serialNumber = scanner.nextInt();
         Article currentArticle = (Article)articles.get(serialNumber-1);
-        //I HAVE THE ARTICLE OBJECT..I CAN DIRECTLY RUN ...DELETE FROM TABLE WHERE ARTICLE_TITLE = ?
-        //WILL THAT WORK?
-
-//        List<WritesArticle> writesArticles = writesArticleController.getAuthorsByArticle(currentArticle);
-//        List<HasArticle> hasArticles = hasArticleController.getPeriodicPublicationForArticles(currentArticle);
         if(writesArticleController.deleteWritesArticles(currentArticle)){
+
             if(hasArticleController.deletePublicationsForArticles(currentArticle)){
                 if(articleController.deleteArticle((Article) articles.get(serialNumber-1))){
                     System.out.println("Article deleted successfully!");
                 }
             }
         }
-
     }
 
     private static void createArticle(){
@@ -1205,7 +1259,10 @@ public class Dashboard {
         String title = scanner.nextLine();
         System.out.println("Enter the date of creation for article (YYYY-MM-DD) :");
         String date = scanner.next();
-        Article a = new Article(title,Date.valueOf(date));
+        System.out.println("Enter the text for the article : ");
+        dummy = scanner.nextLine();
+        String text = scanner.nextLine();
+        Article a = new Article(title,Date.valueOf(date),text);
         if(articleController.createArticle(a)){
             System.out.println("Article was created successfully!");
         }
@@ -1219,7 +1276,7 @@ public class Dashboard {
         List<Object> articles = articleController.getArticlesByDate(date);
         if(articles.size()!=0) {
             System.out.println("The articles for the provided date are as follows : ");
-            String columns1 = "SerialNo\tTitle\tTDateOFCreation";
+            String columns1 = "SerialNo\tId\tTitle\tTDateOFCreation";
             PageUtility.displayOptions(columns1,articles);
         }else{
             System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
@@ -1236,7 +1293,7 @@ public class Dashboard {
         List<Object> articles = articleController.getArticlesByTopic(((PublicationTopic)publicationTopics.get(topicId-1)).getPublicationTopicName());
         if(articles.size()!=0){
             System.out.println("The articles for the topic are as follows : ");
-            String columns1 = "SerialNo\tTitle\tTDateOFCreation";
+            String columns1 = "SerialNo\tId\tTitle\tTDateOFCreation";
             PageUtility.displayOptions(columns1,articles);
         }else{
             System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
@@ -1382,14 +1439,14 @@ public class Dashboard {
             System.out.println("Enter the articles you wish to add for the given periodic publication :");
 
             System.out.println("Enter the serial numbers for articles to be assigned the current periodic publication (seperated by \",\") :");
-            String columns2 = "SerialNo\tTitle\tDate Of creation";
+            String columns2 = "SerialNo\tId\tTitle\tDate Of creation";
             PageUtility.displayOptions(columns2,articles);
             String articleSerialNumbers = scanner.next();
             String articlesToBeAssigned[] = articleSerialNumbers.split(",");
 
             for(String id : articlesToBeAssigned){
-                String title = ((Article)(articles.get(Integer.parseInt(id)-1))).getTitle();
-                hasArticles.add(new HasArticle(periodicPublication,title));
+                Integer articleId = ((Article)(articles.get(Integer.parseInt(id)-1))).getArticleId();
+                hasArticles.add(new HasArticle(periodicPublication.getPublication().getPublicationId(),articleId));
             }
             System.out.println("Do you wish to add articles to more periodic publications (Y/N)?");
             String option = scanner.next();
@@ -1403,12 +1460,13 @@ public class Dashboard {
         }
 
         HasArticle result = hasArticleController.addArticleToPeriodicPublication(hasArticles);
+//        System.out.println("Dashboard result : "+result.toString());
         if(result == null){
             System.out.println("Articles have been assigned to given periodic publications successfully!");
         }else {
-            System.out.println("Assignment failed for the given pair :\n"+result.toString());
-            System.out.println("All the previous pairs have been successfully added!");
-            System.out.println("All the later pairs have been skipped!");
+            //TODO
+           System.out.println("Transaction failed due to the assignment of the following tuple :\n"+result.toString());
+           System.out.println("Transaction rolled back!");
         }
     }
 
@@ -1430,14 +1488,14 @@ public class Dashboard {
                 System.out.println("There are no articles assigned to this publication");
             } else {
                 System.out.println("Enter the serial numbers for articles to be deleted for the current periodic publication (seperated by \",\") :");
-                String columns2 = "SerialNo\tTitle\tDate Of creation";
+                String columns2 = "SerialNo\tId\tTitle\tDate Of creation";
                 PageUtility.displayOptions(columns2,articles);
                 String articleSerialNumbers = scanner.next();
                 String articlesToBeDeleted[] = articleSerialNumbers.split(",");
 
                 for(String id : articlesToBeDeleted){
-                    String title = ((Article)(articles.get(Integer.parseInt(id)-1))).getTitle();
-                    hasArticles.add(new HasArticle(periodicPublication,title));
+                    Integer articleId = ((Article)(articles.get(Integer.parseInt(id)-1))).getArticleId();
+                    hasArticles.add(new HasArticle(periodicPublication.getPublication().getPublicationId(),articleId));
                 }
             }
 
@@ -1680,9 +1738,8 @@ public class Dashboard {
         if(result == null){
             System.out.println("Editors have been assigned to given publications successfully!");
         }else{
-            System.out.println("Assignment failed for the given pair :\n"+result.toString());
-            System.out.println("All the previous pairs have been successfully added.!");
-            System.out.println("All the later pairs have been skipped!");
+            System.out.println("Transaction failed due to the assignment of the following tuple :\n"+result.toString());
+            System.out.println("Transaction rolled back!");
         }
 
     }
@@ -1723,7 +1780,7 @@ public class Dashboard {
         periodicPublicationMenu.add("Update issue.");
         periodicPublicationMenu.add("Delete issue.");
         periodicPublicationMenu.add("Add articles to periodic publication.");
-        periodicPublicationMenu.add("Delete articles to periodic publication.");
+        periodicPublicationMenu.add("Delete articles from periodic publication.");
         periodicPublicationMenu.add("Go Back.");
     }
 
@@ -1818,4 +1875,22 @@ public class Dashboard {
 
         return finalOption;
     }
+
+
+    private static void initCalendar() {
+        calendar = new HashMap<>();
+        calendar.put(1,31);
+        calendar.put(2,28);
+        calendar.put(3,31);
+        calendar.put(4,30);
+        calendar.put(5,31);
+        calendar.put(6,30);
+        calendar.put(7,31);
+        calendar.put(8,31);
+        calendar.put(9,30);
+        calendar.put(10,31);
+        calendar.put(11,30);
+        calendar.put(12,31);
+    }
+
 }

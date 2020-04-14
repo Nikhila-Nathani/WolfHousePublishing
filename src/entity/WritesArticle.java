@@ -2,33 +2,27 @@ package entity;
 
 public class WritesArticle {
 
-    private Author author;
-    private String articleTitle;
+    Integer authorId;
+    Integer articleId;
 
-    public WritesArticle(Author authorId, String articleTitle) {
-        this.author = author;
-        this.articleTitle = articleTitle;
+    public Integer getAuthorId() {
+        return authorId;
     }
 
-
-    public Author getAuthor() {
-        return author;
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public Integer getArticleId() {
+        return articleId;
     }
 
-    public String getArticleTitle() {
-        return articleTitle;
+    public void setArticleId(Integer articleId) {
+        this.articleId = articleId;
     }
 
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle;
-    }
-
-    @Override
-    public String toString() {
-        return "\t"+articleTitle+"\t"+author.getEmployee().getEmployeeName();
+    public WritesArticle(Integer authorId, Integer articleId) {
+        this.authorId = authorId;
+        this.articleId = articleId;
     }
 }

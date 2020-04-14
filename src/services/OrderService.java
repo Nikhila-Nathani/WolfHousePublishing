@@ -19,6 +19,8 @@ public class OrderService {
     private static final String GET_ALL_ORDERS_FOR_PAYMENT = "SELECT O.TRANSACTION_ID AS TID, O.ID AS ID, O.PRICE AS PRICE, O.SHIPPING_COST AS SC, O.DELIVERY_DATE AS DD, O.ORDER_DATE AS OD FROM ORDERS O WHERE ID NOT IN (SELECT OP.ORDER_ID FROM ORDER_PAYMENT OP)";
     private static final String GET_ALL_PAID_ORDERS = "SELECT O.TRANSACTION_ID AS TID, O.ID AS ID, O.PRICE AS PRICE, O.SHIPPING_COST AS SC, O.DELIVERY_DATE AS DD, O.ORDER_DATE AS OD FROM ORDERS O WHERE ID IN (SELECT OP.ORDER_ID FROM ORDER_PAYMENT OP)";
 
+    private static final String SET_TRANSACTION_ID = "UPDATE ORDERS SET TRANSACTION_ID = ? WHERE ID = ?";
+
 
     public boolean deleteOrder(Order order){
         boolean flag = false;
@@ -131,6 +133,34 @@ public class OrderService {
                 System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
             }
             return orders;
+        }
+    }
+
+
+    public boolean updateTransactionId (Order order) {
+        boolean flag = false;
+        Connection connection = null;
+        try{
+            connection = DatabaseUtility.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SET_TRANSACTION_ID);
+            preparedStatement.setInt(1,order.getTransactionId());
+            preparedStatement.setInt(2, order.getOrderId());
+            int result = preparedStatement.executeUpdate();
+            flag = result == 1? true: false;
+        }catch (Exception e){
+            if(connection!=null){
+                System.out.println(Constants.RECORD_NOT_FOUND.getMessage());
+            }else{
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
+            return flag;
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            }catch (Exception e){
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return flag;
         }
     }
 }

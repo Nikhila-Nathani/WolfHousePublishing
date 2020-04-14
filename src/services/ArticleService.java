@@ -13,15 +13,15 @@ import java.util.List;
 
 public class ArticleService {
 
-    private static final String GET_ALL_ARTICLES = "SELECT * FROM ARTICLE";
-    private static final String GET_ARTICLES_BY_TOPIC = "SELECT A.TITLE AS A_TITLE, A.DATE_OF_CREATION AS A_DATE_OF_CREATION " +
+    private static final String GET_ALL_ARTICLES = "SELECT A.ID AS A_ID, A.TITLE AS A_TITLE, A.DATE_OF_CREATION AS DOC, A.TEXT AS TEXT  FROM ARTICLE A";
+    private static final String GET_ARTICLES_BY_TOPIC = "SELECT A.ID AS A_ID, A.TITLE AS A_TITLE, A.DATE_OF_CREATION AS DOC, A.TEXT AS TEXT " +
             "FROM ARTICLE A, HAS_ARTICLE H_ARTICLE, PERIODIC_PUBLICATION PP, PUBLICATION P, PUBLICATION_TOPIC PT " +
-            "WHERE H_ARTICLE.ARTICLE_TITLE = A.TITLE AND H_ARTICLE.PERIODIC_PUBLICATION_ID = PP.PUBLICATION_ID AND PP.PUBLICATION_ID = P.ID AND P.PUBLICATION_TOPIC = PT.ID AND PT.NAME = ?";
-    private static final String GET_ARTICLES_BY_DATE = "SELECT A.TITLE AS A_TITLE, A.DATE_OF_CREATION AS A_DATE_OF_CREATION FROM ARTICLE AS A WHERE  DATE_OF_CREATION = ?";
+            "WHERE H_ARTICLE.ARTICLE_ID = A.ID AND H_ARTICLE.PUBLICATION_ID = PP.PUBLICATION_ID AND PP.PUBLICATION_ID = P.ID AND P.PUBLICATION_TOPIC = PT.ID AND PT.NAME = ?";
+    private static final String GET_ARTICLES_BY_DATE = "SELECT A.ID AS ARTICLE_ID, A.TITLE AS A_TITLE, A.DATE_OF_CREATION AS DOC, A.TEXT AS TEXT FROM ARTICLE AS A WHERE  DATE_OF_CREATION = ?";
 
-    private static final String CREATE_ARTICLE = "INSERT INTO ARTICLE (TITLE,DATE_OF_CREATION) VALUES(?,?)";
-    private static final String DELETE_ARTICLE = "DELETE  FROM ARTICLE WHERE TITLE=? AND DATE_OF_CREATION =?";
-    private static final String UPDATE_ARTICLE = "UPDATE ARTICLE SET DATE_OF_CREATION = ? WHERE TITLE = ?";
+    private static final String CREATE_ARTICLE = "INSERT INTO ARTICLE (TITLE,DATE_OF_CREATION,TEXT) VALUES(?,?,?)";
+    private static final String DELETE_ARTICLE = "DELETE  FROM ARTICLE WHERE ID = ?";
+    private static final String UPDATE_ARTICLE = "UPDATE ARTICLE SET TITLE = ? , DATE_OF_CREATION = ?, TEXT = ? WHERE ID = ?";
 
     public List<Object> getAllArticles(){
         List<Object> articles = new ArrayList<>();
@@ -32,12 +32,17 @@ public class ArticleService {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){
-                    Article a = new Article(resultSet.getString("TITLE"),resultSet.getDate("DATE_OF_CREATION"));
+                    Article a = new Article(
+                            resultSet.getInt("A_ID"),resultSet.getString("A_TITLE"),
+                            resultSet.getDate("DOC"),resultSet.getString("TEXT")
+                    );
                     articles.add(a);
                 }
             }
         }catch(Exception e){
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection == null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
             return articles;
         }finally {
             try{
@@ -59,12 +64,17 @@ public class ArticleService {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){
-                    Article a = new Article(resultSet.getString("A_TITLE"),resultSet.getDate("A_DATE_OF_CREATION"));
+                    Article a = new Article(
+                            resultSet.getInt("A_ID"),resultSet.getString("A_TITLE"),
+                            resultSet.getDate("DOC"),resultSet.getString("TEXT")
+                    );
                     articles.add(a);
                 }
             }
         }catch(Exception e){
-            System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            if(connection==null){
+                System.out.println(Constants.CONNECTION_ERROR.getMessage());
+            }
             return articles;
         }finally {
             try{
@@ -86,7 +96,10 @@ public class ArticleService {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){
-                    articles.add(new Article(resultSet.getString("A_TITLE"),resultSet.getDate("A_DATE_OF_CREATION")));
+                    articles.add(new Article(
+                            resultSet.getInt("ARTICLE_ID"),resultSet.getString("TITLE"),
+                            resultSet.getDate("DOC"),resultSet.getString("TEXT")
+                    ));
                 }
             }
         }catch(Exception e){
@@ -113,6 +126,7 @@ public class ArticleService {
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ARTICLE);
             preparedStatement.setString(1,article.getTitle());
             preparedStatement.setDate(2,article.getDateOfCreation());
+            preparedStatement.setString(3,article.getText());
             int result = preparedStatement.executeUpdate();
             flag = result ==1?true:false;
 
@@ -139,8 +153,7 @@ public class ArticleService {
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ARTICLE);
-            preparedStatement.setString(1,article.getTitle());
-            preparedStatement.setDate(2,article.getDateOfCreation());
+            preparedStatement.setInt(1,article.getArticleId());
             int result = preparedStatement.executeUpdate();
             flag = result ==1?true:false;
         }catch(Exception e){
@@ -166,8 +179,10 @@ public class ArticleService {
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ARTICLE);
-            preparedStatement.setDate(1,currentArticle.getDateOfCreation());
-            preparedStatement.setString(2,currentArticle.getTitle());
+            preparedStatement.setDate(2,currentArticle.getDateOfCreation());
+            preparedStatement.setString(1,currentArticle.getTitle());
+            preparedStatement.setString(3,currentArticle.getText());
+            preparedStatement.setInt(4, currentArticle.getArticleId());
             int result = preparedStatement.executeUpdate();
             flag = result == 1?true:false;
         }catch(Exception e){

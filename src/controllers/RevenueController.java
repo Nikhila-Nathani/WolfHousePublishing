@@ -2,6 +2,7 @@ package controllers;
 
 import services.RevenueService;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,24 +13,24 @@ public class RevenueController {
         revenueService = new RevenueService();
     }
 
-    public Map<String,Integer> getTotalRevenuePerLocation(){
-        return revenueService.getTotalRevenuePerLocation();
+    public Map<String,Integer> getTotalRevenuePerLocation(Date startDate, Date endDate){
+        return revenueService.getTotalRevenuePerLocation(startDate,endDate);
     }
 
-    public  Map<Integer,Map<String,Integer>> getTotalRevenuePerDistributor() {
-        return revenueService.getTotalRevenuePerDistributor();
+    public  Map<Integer,Map<String,Integer>> getTotalRevenuePerDistributor(Date startDate, Date endDate) {
+        return revenueService.getTotalRevenuePerDistributor(startDate,endDate);
     }
 
-    public int getTotalRevenue() {
-        return revenueService.getTotalRevenue();
+    public int getTotalRevenue(Date startDate, Date endDate) {
+        return revenueService.getTotalRevenue(startDate,endDate);
     }
 
-    public int getTotalExpense(){
-        return revenueService.getTotalExpense();
+    public long getTotalExpense(Date startDate, Date endDate){
+        return revenueService.getTotalExpense(startDate,endDate);
     }
 
-    public Map<String, Integer> getTotalRevenuePerCity(){
-        return revenueService.getTotalRevenuePerCity();
+    public Map<String, Integer> getTotalRevenuePerCity(Date startDate, Date endDate){
+        return revenueService.getTotalRevenuePerCity(startDate,endDate);
     }
 
     public Map<String, List<List<Object>>> getPerDistributorPerPublicationPrice(){

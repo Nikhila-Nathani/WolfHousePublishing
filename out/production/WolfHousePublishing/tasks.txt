@@ -26,26 +26,23 @@ Operation 1: [COMPLETED]
         13. get editors for publication
             getEditorsForPublication()
 
-<<<<<<< HEAD
 Operation 2: 11 done 7 rem
         1. add book
            createBook()
         2. add book edition
+            addEdition();
         3. delete book edition
+            deleteEdition()
         4. delete book
            deleteBook()
-=======
-Operation 2:
-        1. add book
-        2. add book edition
-        3. delete book edition
-        4. delete book
->>>>>>> d0f6029b63c389b20a3f9db0bf86ca07d124f013
         5. add new issue
+            addNewIssue()
         6. delete issue
+            deleteIssue()
         7. add article
            createArticle()
         8. update article
+           updateArticle()
         9. delete article
            deleteArticle()
         10. get book by topic
@@ -53,50 +50,46 @@ Operation 2:
         11. get book by date
             getBookByDate()
         12. get book by auhtor name
-<<<<<<< HEAD
             getBooksByAuthorName()
-=======
->>>>>>> d0f6029b63c389b20a3f9db0bf86ca07d124f013
         13. get article by topic
             getArticlesByTopic()
         14. get article by date
             getArticlesByDate()
         15. get article by author name
-<<<<<<< HEAD
             getArticlesByAuthorName()
-=======
->>>>>>> d0f6029b63c389b20a3f9db0bf86ca07d124f013
         16. process payment for employee
+            processEmployeePayment()
         17. update book edition
+            updateEdition()
         18. update publication issue
+            updateIssue()
 
 Operation 3:
-<<<<<<< HEAD
-        1. add new distributor
-        createDistributor()
-        2. update distributor
-        updateDistributor()
-        3. delete distributor
-        deleteDistributor()
-        4. create order
-
-=======
         1. add new distributor (In progress)
+            addDistributor()
         2. update distributor
+            updateDistributor()
         3. delete distributor
+            deleteDistributor()
         4. create order
->>>>>>> d0f6029b63c389b20a3f9db0bf86ca07d124f013
+           createORder()
         5. update balance on receipt of order
         6. generate bill
+            5,6 generateBill()
 
 Operation 4:
         1. Number and total price of copies of each publication bought per distributor per month
         2. Total revenue
+            totalRevenue();
         3. Total expenses
+            totalExpense()
         4. Total current number of distributors
+            totalDistributors()
         5. Total revenue per city
         6. Total revenue per distributor
+            getTotalRevenuePerDistributor()
         7. Total revenue per location
+            getTotalRevenuePerLocation()
         8. Total payments per time period and per work type (book authorship)
         9. Calculate total payments per time period and per work type (ARTICLE authorship)
-        10. Calculate total payments per time period and per work type (EDITOR authorship):
+        10. Calculate total payments per time period and per work type (EDITOR authorship)

@@ -23,13 +23,20 @@ public class AddressService {
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
+            DatabaseUtility.beginTransaction();
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_NEW_ADDRESS);
             preparedStatement.setInt(1,address.getDistributorId());
             preparedStatement.setString(2,address.getLocation());
             preparedStatement.setString(3,address.getContactPerson());
             preparedStatement.setString(4,address.getCity());
             int result = preparedStatement.executeUpdate();
+            if(result==1){
+                connection.commit();
+            }else{
+                connection.rollback();
+            }
             flag = result == 1?true:false;
+            DatabaseUtility.endTransaction();
         }catch (Exception e){
             if(connection!=null){
                 System.out.println(Constants.CONSTRAINT_VIOLATED.getMessage());
@@ -39,7 +46,9 @@ public class AddressService {
             return flag;
         }finally {
             try{
+
                 DatabaseUtility.closeconnection();
+
             }catch (Exception e){
                 System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
             }
@@ -85,7 +94,6 @@ public class AddressService {
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GET_ADDRESS_FOR_DISTRIBUTOR);
             preparedStatement.setInt(1,currentDistributor.getDistributorId());
-            System.out.println(preparedStatement.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){
@@ -121,7 +129,7 @@ public class AddressService {
             preparedStatement.setString(3,address.getContactPerson());
             preparedStatement.setInt(4,address.getDistributorId());
             preparedStatement.setString(5, oldLocation);
-            System.out.println(preparedStatement.toString());
+//            System.out.println(preparedStatement.toString());
             int result = preparedStatement.executeUpdate();
             flag = result>=0?true:false;
 

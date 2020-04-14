@@ -1,32 +1,27 @@
 package entity;
 
 public class HasArticle {
-    PeriodicPublication periodicPublication;
-    String articleTitle;
+    Integer periodicPublicationIdn;
+    Integer articleId;
 
-    public HasArticle(PeriodicPublication periodicPublication, String articleTitle) {
-        this.periodicPublication = periodicPublication;
-        this.articleTitle = articleTitle;
+    public Integer getPeriodicPublicationIdn() {
+        return periodicPublicationIdn;
     }
 
-    @Override
-    public String toString() {
-        return "Publication Name : \t"+periodicPublication.getPublication().getPublicationTitle()+"\tArticle : \t"+articleTitle;
+    public void setPeriodicPublicationIdn(Integer periodicPublicationIdn) {
+        this.periodicPublicationIdn = periodicPublicationIdn;
     }
 
-    public PeriodicPublication getPeriodicPublication() {
-        return periodicPublication;
+    public Integer getArticleId() {
+        return articleId;
     }
 
-    public void setPeriodicPublication(PeriodicPublication periodicPublication) {
-        this.periodicPublication = periodicPublication;
+    public void setArticleId(Integer articleId) {
+        this.articleId = articleId;
     }
 
-    public String getArticleTitle() {
-        return articleTitle;
-    }
-
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle;
+    public HasArticle(Integer periodicPublicationIdn, Integer articleId) {
+        this.periodicPublicationIdn = periodicPublicationIdn;
+        this.articleId = articleId;
     }
 }

@@ -16,19 +16,18 @@ public class WritesArticleController {
     }
 
     public List<Object> getArticlesByAuthor(String authorName){
-        List<Object> writesArticles = writesArticleService.getArticlesByAuthor(authorName);
-        List<Object> articles = new ArrayList<>();
-        for(Object wb : writesArticles){
-            articles.add(((WritesArticle)wb).getArticleTitle());
-        }
-        return articles;
+
+        return writesArticleService.getArticlesByAuthor(authorName);
     }
 
-    public List<WritesArticle> getAuthorsByArticle(Article article) {
-        return writesArticleService.getAuthorsByArticle(article);
-    }
+//    public List<WritesArticle> getAuthorsByArticle(Article article) {
+//        return writesArticleService.getAuthorsByArticle(article);
+//    }
 
     public boolean deleteWritesArticles(Article article) {
         return writesArticleService.deleteWritesArticleForArticle(article);
+    }
+
+    public void addArticlesForAuthor(List<WritesArticle> writesArticles) {
     }
 }

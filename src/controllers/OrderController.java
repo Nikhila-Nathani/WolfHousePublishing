@@ -32,4 +32,8 @@ public class OrderController {
     public List<Object> getAllPaidOrders() {
         return orderService.getAllPaidOrders();
     }
+
+    public boolean updateTransactionId(Order order){ return orderService.updateTransactionId(order);}
+
+
 }

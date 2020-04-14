@@ -4,6 +4,7 @@ import constants.Constants;
 import utility.DatabaseUtility;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -12,19 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 public class RevenueService {
-    private static final String TOTAL_REVENUE_PER_LOCATION = "SELECT SUM(O.PRICE) AS TOTAL_PRICE,OP.LOCATION AS LOCATION FROM ORDERS O, ORDERS_PLACED OP WHERE O.ID = OP.ORDER_ID GROUP BY(OP.LOCATION)";
+    private static final String TOTAL_REVENUE_PER_LOCATION = "SELECT SUM(O.PRICE+O.SHIPPING_COST) AS TOTAL_PRICE,OP.LOCATION AS LOCATION FROM TRANSACTIONS T, ORDERS O, ORDERS_PLACED OP, ORDER_PAYMENT AS OP1 WHERE O.ID = OP.ORDER_ID AND OP1.ORDER_ID = O.ID AND OP1.TRANSACTION_ID = T.ID AND  DATE_OF_TRANS BETWEEN ? AND ? GROUP BY(OP.LOCATION)";
 
-    private static final String TOTAL_REVENEUE_PER_DISTRIBUTOR = "SELECT SUM(O.PRICE) AS TOTAL_PRICE, D.NAME AS DNAME, D.ID AS ID FROM ORDERS O, ORDERS_PLACED OP, DISTRIBUTOR D WHERE O.ID = OP.ORDER_ID AND OP.DISTRIBUTOR_ID = D.ID GROUP BY (D.ID)";
+    private static final String TOTAL_REVENEUE_PER_DISTRIBUTOR = "SELECT SUM(O.PRICE+O.SHIPPING_COST) AS TOTAL_PRICE, D.NAME AS DNAME, D.ID AS ID FROM TRANSACTIONS T,ORDERS O, ORDERS_PLACED OP, ORDER_PAYMENT OP1, DISTRIBUTOR D WHERE O.ID = OP.ORDER_ID AND OP.DISTRIBUTOR_ID = D.ID AND OP1.ORDER_ID = O.ID AND OP1.TRANSACTION_ID=T.ID AND T.DATE_OF_TRANS BETWEEN  ? AND ? GROUP BY (D.ID)";
 
-    private static final String TOTAL_REVENEUE = "SELECT SUM(T.AMOUNT) FROM TRANSACTIONS T, ORDER_PAYMENT OP WHERE T.ID = OP.TRANSACTION_ID";
+    private static final String TOTAL_REVENEUE = "SELECT SUM(T.AMOUNT) FROM TRANSACTIONS T, ORDER_PAYMENT OP WHERE T.ID = OP.TRANSACTION_ID AND DATE_OF_TRANS BETWEEN ? AND ?";
 
-    private static final String TOTAL_EXPENSE = "SELECT (A.EMPLOYEE_PAYMENT) FROM" +
-            "(SELECT SUM(AMOUNT) AS EMPLOYEE_PAYMENT FROM TRANSACTIONS T WHERE T.ID IN (" +
-            " SELECT T.ID FROM TRANSACTIONS T, EMPLOYEE_PAYMENT EP WHERE EP.TRANSACTION_ID = T.ID" +
-            " UNION" +
-            " SELECT T.ID AS P1 FROM TRANSACTIONS T, CONTRACT C WHERE C.TRANSACTION_ID = T.ID)) AS A,";
+    private static final String TOTAL_EXPENSE = "SELECT SUM(T.AMOUNT) AS AMOUNT FROM TRANSACTIONS T WHERE T.ID IN" +
+            "(select T.ID FROM TRANSACTIONS T, EMPLOYEE_PAYMENT EP WHERE T.ID= EP.TRANSACTION_ID AND T.DATE_OF_TRANS BETWEEN ? AND ?" +
+            " UNION " +
+            "select T.ID FROM TRANSACTIONS T, CONTRACT C WHERE T.ID= C.TRANSACTION_ID AND T.DATE_OF_TRANS BETWEEN ? AND ?)";
 
-    private static final String TOTAL_REVENUE_PER_CITY = "SELECT CITY AS CITY, SUM(O.PRICE) AS TOTAL_PRICE FROM ORDERS_PLACED OP, ORDERS O, ADDRESS A WHERE O.ID = OP.ORDER_ID AND OP.LOCATION = A.LOCATION   GROUP BY (A.CITY)";
+    private static final String TOTAL_REVENUE_PER_CITY = "SELECT CITY AS CITY, SUM(O.PRICE) AS TOTAL_PRICE FROM ORDERS_PLACED OP, ORDERS O, ADDRESS A, TRANSACTIONS T, ORDER_PAYMENT OP1 WHERE O.ID = OP.ORDER_ID AND OP.LOCATION = A.LOCATION AND OP1.ORDER_ID = O.ID AND OP1.TRANSACTION_ID = T.ID AND T.DATE_OF_TRANS BETWEEN ? AND ?   GROUP BY (A.CITY)";
 
     private static final String PRICE_PER_DISTRIBUTOR_PER_PUBLICATION =  "SELECT D.NAME, P.TITLE, SUM(OC.NO_OF_COPIES) AS TOTAL_COPIES, P.PRICE*SUM(OC.NO_OF_COPIES) AS VALUE, MONTH(O.ORDER_DATE) AS MONTH FROM PUBLICATION P,ORDERS O,ORDERS_PLACED OP, ORDER_CONTAINS OC, DISTRIBUTOR D WHERE OP.ORDER_ID = OC.ORDER_ID AND OP.DISTRIBUTOR_ID = D.ID AND OC.PUBLICATION_ID = P.ID AND O.ID=OP.ORDER_ID GROUP BY (D.ID), (OC.PUBLICATION_ID),(MONTH(O.ORDER_DATE))";
 
@@ -36,12 +36,14 @@ public class RevenueService {
             "(SELECT SUM(AMOUNT) AS EDIT_SUM FROM EMPLOYEE_PAYMENT EP, TRANSACTIONS T WHERE EP.EMPLOYEE_ID IN(\n"+
             "    SELECT E.EDITOR_ID  FROM EDITS E) AND T.ID = EP.TRANSACTION_ID) AS C";
 
-    public Map<String,Integer> getTotalRevenuePerLocation(){
+    public Map<String,Integer> getTotalRevenuePerLocation(Date startDate, Date endDate){
             Map<String,Integer> answer = new HashMap<>();
             Connection connection = null;
             try{
                 connection = DatabaseUtility.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(TOTAL_REVENUE_PER_LOCATION);
+                preparedStatement.setDate(1,startDate);
+                preparedStatement.setDate(2,endDate);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if(resultSet!=null){
                     while(resultSet.next()){
@@ -67,12 +69,14 @@ public class RevenueService {
             }
         }
 
-    public Map<Integer,Map<String, Integer>> getTotalRevenuePerDistributor() {
+    public Map<Integer,Map<String, Integer>> getTotalRevenuePerDistributor(Date startDate, Date endDate) {
         Map<Integer,Map<String,Integer>> answer = new HashMap<>();
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(TOTAL_REVENEUE_PER_DISTRIBUTOR);
+            preparedStatement.setDate(1,startDate);
+            preparedStatement.setDate(2,endDate);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){
@@ -98,12 +102,14 @@ public class RevenueService {
         }
     }
 
-    public int getTotalRevenue() {
+    public int getTotalRevenue(Date startDate, Date endDate) {
         int answer = -1;
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(TOTAL_REVENEUE);
+            preparedStatement.setDate(1,startDate);
+            preparedStatement.setDate(2,endDate);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 answer = resultSet.getInt(1);
@@ -126,15 +132,22 @@ public class RevenueService {
     }
 
 
-    public int getTotalExpense() {
-        int answer = -1;
+    public long getTotalExpense(Date startDate, Date endDate) {
+        long answer = -1;
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(TOTAL_EXPENSE);
+            preparedStatement.setDate(1,startDate);
+            preparedStatement.setDate(2,endDate);
+            preparedStatement.setDate(3,startDate);
+            preparedStatement.setDate(4,endDate);
+//            System.out.println(preparedStatement.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
+
             if(resultSet.next()){
-                answer = resultSet.getInt(1);
+                answer = resultSet.getLong(1);
+//                System.out.println("result : "+answer);
             }
         } catch(Exception e){
             if(connection!=null){
@@ -153,12 +166,14 @@ public class RevenueService {
         }
     }
 
-    public Map<String,Integer> getTotalRevenuePerCity(){
+    public Map<String,Integer> getTotalRevenuePerCity(Date startDate, Date endDate){
         Map<String,Integer> answer = new HashMap<>();
         Connection connection = null;
         try{
             connection = DatabaseUtility.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(TOTAL_REVENUE_PER_CITY);
+            preparedStatement.setDate(1,startDate);
+            preparedStatement.setDate(2,endDate);
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet!=null){
                 while(resultSet.next()){

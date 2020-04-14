@@ -1,5 +1,6 @@
 package controllers;
 
+import constants.Constants;
 import entity.Editor;
 import entity.Edits;
 import entity.Publication;
@@ -18,12 +19,33 @@ public class EditsController {
     }
 
     public Edits assignEditorToPublication(List<Edits> edits){
-        for(Edits e : edits){
-            if(!editService.assignEditorToPublication(e)){
-                return e;
+        Edits result = null;
+        try {
+            Connection connection = DatabaseUtility.getConnection();
+            DatabaseUtility.beginTransaction();
+            for(Edits e : edits){
+                if(!editService.assignEditorToPublication(e,connection)){
+                    connection.rollback();
+                    result = e;
+                    return e;
+                }
             }
+            connection.commit();
+            DatabaseUtility.endTransaction();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try{
+                DatabaseUtility.closeconnection();
+            } catch (Exception e) {
+                System.out.println(Constants.CONNECTION_CLOSE_ERROR.getMessage());
+            }
+            return result;
         }
-        return null;
+
+
     }
 
     public List<Object> getPublicationsForEditor(Editor e){
